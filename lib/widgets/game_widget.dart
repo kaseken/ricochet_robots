@@ -61,15 +61,17 @@ class _State extends State<GameWidget> {
         ));
       }
       if (_board.isGoal(nextPosition, _goal, _focusedRobot)) {
+        final moves = _histories.length;
+        _reset();
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
             title: const Text('Congratulations!'),
-            content: Text('Finished in ${_histories.length} moves.'),
+            content: Text('Finished in $moves moves.'),
             actions: [
               TextButton(
                 onPressed: () {
-                  _reset();
                   Navigator.pop(context);
                 },
                 child: const Text('OK'),
