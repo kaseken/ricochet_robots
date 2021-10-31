@@ -28,4 +28,8 @@ class Position {
         return this;
     }
   }
+
+  bool equals(Position that) {
+    return x == that.x && y == that.y;
+  }
 }

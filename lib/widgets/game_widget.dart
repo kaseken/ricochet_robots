@@ -13,6 +13,15 @@ class GameWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _State();
 }
 
+class _History {
+  RobotColors color;
+  Position position;
+  _History({
+    required this.color,
+    required this.position,
+  });
+}
+
 class _State extends State<GameWidget> {
   final board = Board();
   // TODO: set goal randomly.
@@ -21,14 +30,8 @@ class _State extends State<GameWidget> {
     color: RobotColors.red,
     type: GoalTypes.sun,
   );
+  final List<_History> _histories = List.empty(growable: true);
   var focusedRobot = const Robot(color: RobotColors.red);
-  late RobotPositions robotPositions;
-
-  @override
-  void initState() {
-    super.initState();
-    robotPositions = board.robotPositions;
-  }
 
   void _onColorSelected(RobotColors color) {
     setState(() {
@@ -37,8 +40,22 @@ class _State extends State<GameWidget> {
   }
 
   void _onDirectionSelected(Directions direction) {
+    final currentPosition = board.robotPositions[focusedRobot.color];
+    if (currentPosition == null) {
+      return;
+    }
     setState(() {
-      robotPositions = board.move(focusedRobot, direction);
+      board.move(focusedRobot, direction);
+      final nextPosition = board.robotPositions[focusedRobot.color];
+      if (nextPosition == null) {
+        return;
+      }
+      if (!nextPosition.equals(currentPosition)) {
+        _histories.add(_History(
+          color: focusedRobot.color,
+          position: currentPosition,
+        ));
+      }
     });
   }
 
@@ -55,7 +72,7 @@ class _State extends State<GameWidget> {
                 aspectRatio: 1,
                 child: BoardWidget(
                   board: board,
-                  robotPositions: robotPositions,
+                  robotPositions: board.robotPositions,
                 ),
               ),
             ),

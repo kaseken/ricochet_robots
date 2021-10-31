@@ -86,20 +86,77 @@ class ControlButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _buildColorButtons(RobotColors.values),
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children:
+                    _buildColorButtons([RobotColors.red, RobotColors.blue]),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children:
+                    _buildColorButtons([RobotColors.green, RobotColors.yellow]),
+              ),
+            ],
+          ),
+          flex: 2,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: _buildDirectionButtons([
-            Directions.left,
-            Directions.up,
-            Directions.down,
-            Directions.right,
-          ]),
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _buildDirectionButtons([
+                  Directions.up,
+                ]),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: _buildDirectionButtons([
+                  Directions.left,
+                  Directions.down,
+                  Directions.right,
+                ]),
+              ),
+            ],
+          ),
+          flex: 3,
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.grey), // TODO: change color.
+                        ),
+                        onPressed: () => {},
+                        child: const SizedBox(
+                          height: 108,
+                          child: Icon(
+                            Icons.replay,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+          flex: 1,
         ),
       ],
     );
