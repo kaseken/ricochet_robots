@@ -18,7 +18,7 @@ Color getActualColor(RobotColors color) {
     case RobotColors.yellow:
       return Colors.amber;
     default:
-      return Colors.transparent;
+      return Colors.black;
   }
 }
 

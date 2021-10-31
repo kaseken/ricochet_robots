@@ -8,7 +8,7 @@ enum GoalTypes {
   moon,
 }
 
-IconData? getIcon(GoalTypes type) {
+IconData getIcon(GoalTypes type) {
   switch (type) {
     case GoalTypes.star:
       return Icons.star;
@@ -19,7 +19,7 @@ IconData? getIcon(GoalTypes type) {
     case GoalTypes.planet:
       return Icons.language;
     default:
-      return null;
+      return Icons.help;
   }
 }
 

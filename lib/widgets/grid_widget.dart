@@ -31,14 +31,12 @@ class GridWidget extends StatelessWidget {
   Widget _buildGoal(Grid grid) {
     if (grid is NormalGoalGrid) {
       final iconData = getIcon(grid.type);
-      if (iconData != null) {
-        // TODO: change icon to image.
-        return Icon(
-          iconData,
-          color: getActualColor(grid.color),
-          size: 20,
-        );
-      }
+      // TODO: change icon to image.
+      return Icon(
+        iconData,
+        color: getActualColor(grid.color),
+        size: 20,
+      );
     }
     if (grid is WildGoalGrid) {
       // TODO: change icon to image.
