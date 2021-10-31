@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ricochet_robots/widgets/game_widget.dart';
 
 void main() {
   runApp(const App());
@@ -13,26 +14,22 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Ricochet Robots Trainer'),
+      home: const Home(title: 'Ricochet Robots Trainer'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class Home extends StatelessWidget {
+  const Home({Key? key, required this.title}) : super(key: key);
   final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
 
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
-      body: const SizedBox.shrink(),
+      body: const GameWidget(),
     );
   }
 }

@@ -1,144 +1,14 @@
-class Robot {
-  final RobotColors color;
-
-  const Robot({
-    required this.color,
-  });
-}
-
-abstract class Grid {
-  final Map<Directions, bool> _canMove = {};
-
-  bool canMove(Directions directions) {
-    return _canMove[directions] ?? false;
-  }
-
-  bool isGoal(Goal goal) => false;
-}
-
-class NormalGrid extends Grid {
-  NormalGrid({
-    bool canMoveUp = true,
-    bool canMoveDown = true,
-    bool canMoveLeft = true,
-    bool canMoveRight = true,
-  }) {
-    _canMove[Directions.up] = canMoveUp;
-    _canMove[Directions.down] = canMoveDown;
-    _canMove[Directions.left] = canMoveLeft;
-    _canMove[Directions.right] = canMoveRight;
-  }
-}
-
-enum RobotColors {
-  red,
-  blue,
-  green,
-  yellow,
-}
-
-enum GoalTypes {
-  star,
-  planet,
-  sun,
-  moon,
-}
-
-abstract class GoalGrid extends Grid {}
-
-class NormalGoalGrid extends GoalGrid {
-  final RobotColors color;
-  final GoalTypes type;
-
-  NormalGoalGrid({
-    this.color = RobotColors.red,
-    this.type = GoalTypes.star,
-    bool canMoveUp = true,
-    bool canMoveDown = true,
-    bool canMoveLeft = true,
-    bool canMoveRight = true,
-  }) {
-    _canMove[Directions.up] = canMoveUp;
-    _canMove[Directions.down] = canMoveDown;
-    _canMove[Directions.left] = canMoveLeft;
-    _canMove[Directions.right] = canMoveRight;
-  }
-
-  @override
-  bool isGoal(Goal goal) {
-    return !goal.isWild && goal.color == color && goal.type == type;
-  }
-}
-
-class WildGoalGrid extends GoalGrid {
-  WildGoalGrid({
-    bool canMoveUp = true,
-    bool canMoveDown = true,
-    bool canMoveLeft = true,
-    bool canMoveRight = true,
-  }) {
-    _canMove[Directions.up] = canMoveUp;
-    _canMove[Directions.down] = canMoveDown;
-    _canMove[Directions.left] = canMoveLeft;
-    _canMove[Directions.right] = canMoveRight;
-  }
-
-  @override
-  bool isGoal(Goal goal) => goal.isWild;
-}
-
-class CenterGrid extends Grid {}
-
-class Position {
-  final int x;
-  final int y;
-
-  const Position({
-    required this.x,
-    required this.y,
-  });
-
-  Position next(Directions directions) {
-    switch (directions) {
-      case Directions.up:
-        return Position(x: x, y: y - 1);
-      case Directions.right:
-        return Position(x: x + 1, y: y);
-      case Directions.down:
-        return Position(x: x, y: y + 1);
-      case Directions.left:
-        return Position(x: x - 1, y: y);
-      default:
-        return this;
-    }
-  }
-}
-
-enum Directions {
-  up,
-  right,
-  down,
-  left,
-}
-
-class Goal {
-  final bool isWild;
-  final RobotColors color;
-  final GoalTypes type;
-
-  const Goal({
-    required this.isWild,
-    required this.color,
-    required this.type,
-  });
-}
+import 'package:ricochet_robots/models/goal.dart';
+import 'package:ricochet_robots/models/grid.dart';
+import 'package:ricochet_robots/models/position.dart';
+import 'package:ricochet_robots/models/robot.dart';
 
 class Board {
-  late final List<List<Grid>> _grids;
+  late final List<List<Grid>> grids;
   late final Map<RobotColors, Position> _robotPositions;
 
   Board() {
-    _grids = BoardBuilder.buildGrids();
+    grids = BoardBuilder.buildGrids();
     _robotPositions = {}; // TODO: set positions.
   }
 
@@ -147,12 +17,12 @@ class Board {
     if (position == null) {
       return false;
     }
-    final currentGrid = _grids[position.y][position.x];
+    final currentGrid = grids[position.y][position.x];
     if (currentGrid.canMove(direction)) {
       return false;
     }
     var to = position; // TODO: make it immutable.
-    while (_grids[to.y][to.x].canMove(direction)) {
+    while (grids[to.y][to.x].canMove(direction)) {
       to = to.next(direction);
     }
     _robotPositions[robot.color] = to;
@@ -160,7 +30,7 @@ class Board {
   }
 
   bool isGoal(Position position, Goal goal) {
-    return _grids[position.y][position.x].isGoal(goal);
+    return grids[position.y][position.x].isGoal(goal);
   }
 }
 
