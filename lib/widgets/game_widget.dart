@@ -96,7 +96,7 @@ class _State extends State<GameWidget> {
     return Center(
       child: Card(
         child: Container(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(2.0),
           constraints: const BoxConstraints(maxWidth: 800, maxHeight: 800),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

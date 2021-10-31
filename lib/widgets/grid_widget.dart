@@ -57,7 +57,7 @@ class GridWidget extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           color: getActualColor(robot.color),
-          borderRadius: BorderRadius.circular(4.0),
+          borderRadius: BorderRadius.circular(2.0),
         ),
         child: LayoutBuilder(builder: (context, constraint) {
           return Icon(
@@ -93,13 +93,13 @@ class GridWidget extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: Padding(
-                  padding: const EdgeInsets.all(4.0),
+                  padding: const EdgeInsets.all(2.0),
                   child: _buildGoal(grid),
                 ),
               ),
               Positioned.fill(
                 child: Padding(
-                  padding: const EdgeInsets.all(2.0),
+                  padding: const EdgeInsets.all(1.0),
                   child: _buildRobot(grid, robot),
                 ),
               )

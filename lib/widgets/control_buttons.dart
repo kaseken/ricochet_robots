@@ -30,11 +30,11 @@ class ControlButtons extends StatelessWidget {
                 ),
                 onPressed: () => onColorSelected(color),
                 child: const SizedBox(
-                  height: 50,
+                  height: 30,
                   child: Icon(
                     Icons.android_outlined,
                     color: Colors.white,
-                    size: 30,
+                    size: 20,
                   ),
                 ),
               ),
@@ -65,7 +65,7 @@ class ControlButtons extends StatelessWidget {
       if (label != null) {
         return Icon(
           label,
-          size: 30,
+          size: 20,
           color: Colors.white,
         );
       }
@@ -88,7 +88,7 @@ class ControlButtons extends StatelessWidget {
                 ),
                 onPressed: () => onDirectionSelected(direction),
                 child: SizedBox(
-                  height: 50,
+                  height: 30,
                   child: _getIcon(direction),
                 ),
               ),
@@ -159,11 +159,11 @@ class ControlButtons extends StatelessWidget {
                         ),
                         onPressed: onRedoPressed,
                         child: const SizedBox(
-                          height: 108,
+                          height: 68,
                           child: Icon(
                             Icons.replay,
                             color: Colors.white,
-                            size: 30,
+                            size: 20,
                           ),
                         ),
                       ),
