@@ -16,36 +16,45 @@ class GameWidget extends StatefulWidget {
 }
 
 class _State extends State<GameWidget> {
-  final board = Board();
+  late Board _board;
   // TODO: set goal randomly.
-  final goal = const Goal(
-    isWild: false,
-    color: RobotColors.red,
-    type: GoalTypes.sun,
-  );
-  final List<History> _histories = List.empty(growable: true);
-  var focusedRobot = const Robot(color: RobotColors.red);
+  late Goal _goal;
+  late List<History> _histories;
+  late Robot _focusedRobot;
 
   void _onColorSelected(RobotColors color) {
     setState(() {
-      focusedRobot = Robot(color: color);
+      _focusedRobot = Robot(color: color);
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _reset();
+  }
+
+  void _reset() {
+    _board = Board();
+    _goal = GoalBuilder.build();
+    _histories = List.empty(growable: true);
+    _focusedRobot = const Robot(color: RobotColors.red);
+  }
+
   void _onDirectionSelected(Directions direction) {
-    final currentPosition = board.robotPositions[focusedRobot.color];
+    final currentPosition = _board.robotPositions[_focusedRobot.color];
     if (currentPosition == null) {
       return;
     }
     setState(() {
-      board.move(focusedRobot, direction);
-      final nextPosition = board.robotPositions[focusedRobot.color];
+      _board.move(_focusedRobot, direction);
+      final nextPosition = _board.robotPositions[_focusedRobot.color];
       if (nextPosition == null) {
         return;
       }
       if (!nextPosition.equals(currentPosition)) {
         _histories.add(History(
-          color: focusedRobot.color,
+          color: _focusedRobot.color,
           position: currentPosition,
         ));
       }
@@ -58,7 +67,7 @@ class _State extends State<GameWidget> {
     }
     setState(() {
       final prevHistory = _histories.removeLast();
-      board.moveTo(Robot(color: prevHistory.color), prevHistory.position);
+      _board.moveTo(Robot(color: prevHistory.color), prevHistory.position);
     });
   }
 
@@ -73,15 +82,15 @@ class _State extends State<GameWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               HeaderWidget(
-                goal: goal,
+                goal: _goal,
                 histories: _histories,
               ),
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: BoardWidget(
-                    board: board,
-                    robotPositions: board.robotPositions,
+                    board: _board,
+                    robotPositions: _board.robotPositions,
                   ),
                 ),
               ),

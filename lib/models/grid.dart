@@ -48,7 +48,7 @@ class NormalGoalGrid extends GoalGrid {
 
   @override
   bool isGoal(Goal goal) {
-    return !goal.isWild && goal.color == color && goal.type == type;
+    return goal.color == color && goal.type == type;
   }
 }
 
@@ -66,7 +66,7 @@ class WildGoalGrid extends GoalGrid {
   }
 
   @override
-  bool isGoal(Goal goal) => goal.isWild;
+  bool isGoal(Goal goal) => goal.color == null;
 }
 
 class CenterGrid extends Grid {}

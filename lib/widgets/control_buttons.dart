@@ -71,8 +71,9 @@ class ControlButtons extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: ElevatedButton(
                 style: ButtonStyle(
+                  // TODO: change color.
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.grey), // FIXME
+                      MaterialStateProperty.all<Color>(Colors.grey),
                 ),
                 onPressed: () => onDirectionSelected(direction),
                 child: SizedBox(

@@ -20,11 +20,18 @@ class HeaderWidget extends StatelessWidget {
   );
 
   Widget _target(Goal goal) {
+    final color = goal.color;
+    if (color == null) {
+      return Text(
+        "Any Robot",
+        style: _textStyle,
+      );
+    }
     return Container(
       height: 20,
       width: 20,
       decoration: BoxDecoration(
-        color: getActualColor(goal.color),
+        color: getActualColor(color),
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: const Icon(
@@ -32,6 +39,23 @@ class HeaderWidget extends StatelessWidget {
         color: Colors.white,
         size: 20,
       ),
+    );
+  }
+
+  Widget _goal(Goal goal) {
+    final type = goal.type;
+    final color = goal.color;
+    if (type == null || color == null) {
+      return const Icon(
+        Icons.help,
+        size: 20,
+        color: Colors.deepPurple,
+      );
+    }
+    return Icon(
+      getIcon(type),
+      size: 20,
+      color: getActualColor(color),
     );
   }
 
@@ -47,11 +71,7 @@ class HeaderWidget extends StatelessWidget {
               Text("Move ", style: _textStyle),
               _target(goal),
               Text(" to ", style: _textStyle),
-              Icon(
-                getIcon(goal.type),
-                size: 20,
-                color: getActualColor(goal.color),
-              ),
+              _goal(goal),
             ],
           ),
           Text("${histories.length.toString()} moves", style: _textStyle),

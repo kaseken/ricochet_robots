@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/models/robot.dart';
 
@@ -24,13 +26,49 @@ IconData getIcon(GoalTypes type) {
 }
 
 class Goal {
-  final bool isWild;
-  final RobotColors color;
-  final GoalTypes type;
+  final RobotColors? color;
+  final GoalTypes? type;
 
   const Goal({
-    required this.isWild,
-    required this.color,
-    required this.type,
+    this.color,
+    this.type,
   });
+}
+
+class GoalBuilder {
+  static Goal build() {
+    final n = Random().nextInt(17);
+    if (n == 0) {
+      return const Goal();
+    }
+    return Goal(color: _buildColor(n), type: _buildType(n));
+  }
+
+  static RobotColors _buildColor(int n) {
+    assert(1 <= n && n <= 16);
+    if (n <= 4) {
+      return RobotColors.red;
+    }
+    if (n <= 8) {
+      return RobotColors.blue;
+    }
+    if (n <= 12) {
+      return RobotColors.green;
+    }
+    return RobotColors.yellow;
+  }
+
+  static GoalTypes _buildType(int n) {
+    assert(1 <= n && n <= 16);
+    if (n % 4 == 1) {
+      return GoalTypes.star;
+    }
+    if (n % 4 == 2) {
+      return GoalTypes.planet;
+    }
+    if (n % 4 == 3) {
+      return GoalTypes.sun;
+    }
+    return GoalTypes.moon;
+  }
 }

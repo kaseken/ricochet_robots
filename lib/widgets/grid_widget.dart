@@ -15,9 +15,9 @@ class GridWidget extends StatelessWidget {
   }) : super(key: key);
 
   Border _buildBorder(Grid grid) {
-    const wall = BorderSide(width: 2, color: Colors.grey);
+    const wall = BorderSide(width: 1, color: Colors.grey);
     const border = BorderSide(
-      width: 1,
+      width: 0.5,
       color: Color.fromRGBO(230, 230, 230, 1.0), // TODO: adjust color.
     );
     return Border(
