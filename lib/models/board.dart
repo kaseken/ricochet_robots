@@ -48,7 +48,7 @@ class Board {
     robotPositions[robot.color] = position;
   }
 
-  bool isGoal(Position position, Goal goal) {
-    return grids[position.y][position.x].isGoal(goal);
+  bool isGoal(Position position, Goal goal, Robot robot) {
+    return grids[position.y][position.x].isGoal(goal, robot);
   }
 }

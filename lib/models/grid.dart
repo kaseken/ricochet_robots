@@ -9,7 +9,7 @@ abstract class Grid {
     return _canMove[directions] ?? false;
   }
 
-  bool isGoal(Goal goal) => false;
+  bool isGoal(Goal goal, Robot robot) => false;
 }
 
 class NormalGrid extends Grid {
@@ -47,8 +47,8 @@ class NormalGoalGrid extends GoalGrid {
   }
 
   @override
-  bool isGoal(Goal goal) {
-    return goal.color == color && goal.type == type;
+  bool isGoal(Goal goal, Robot robot) {
+    return goal.color == color && goal.type == type && robot.color == color;
   }
 }
 
@@ -66,7 +66,8 @@ class WildGoalGrid extends GoalGrid {
   }
 
   @override
-  bool isGoal(Goal goal) => goal.color == null;
+  bool isGoal(Goal goal, Robot robot) =>
+      goal.color == null && goal.type == null;
 }
 
 class CenterGrid extends Grid {}

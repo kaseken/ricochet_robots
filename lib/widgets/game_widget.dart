@@ -35,10 +35,12 @@ class _State extends State<GameWidget> {
   }
 
   void _reset() {
-    _board = Board();
-    _goal = GoalBuilder.build();
-    _histories = List.empty(growable: true);
-    _focusedRobot = const Robot(color: RobotColors.red);
+    setState(() {
+      _board = Board();
+      _goal = GoalBuilder.build();
+      _histories = List.empty(growable: true);
+      _focusedRobot = const Robot(color: RobotColors.red);
+    });
   }
 
   void _onDirectionSelected(Directions direction) {
@@ -57,6 +59,24 @@ class _State extends State<GameWidget> {
           color: _focusedRobot.color,
           position: currentPosition,
         ));
+      }
+      if (_board.isGoal(nextPosition, _goal, _focusedRobot)) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Congratulations!'),
+            content: Text('Finished in ${_histories.length} moves.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  _reset();
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              )
+            ],
+          ),
+        );
       }
     });
   }
