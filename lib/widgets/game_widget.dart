@@ -25,10 +25,16 @@ class _State extends State<GameWidget> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 800),
+        constraints: const BoxConstraints(maxWidth: 800, maxHeight: 800),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            BoardWidget(board: board),
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: BoardWidget(board: board),
+              ),
+            ),
             const NavigationButtons(),
           ],
         ),
@@ -76,7 +82,6 @@ class BoardWidget extends StatelessWidget {
   Widget _buildRow(List<Grid> row) {
     return Row(
       children: row.map((g) => _buildGrid(g)).toList(),
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     );
   }
 
