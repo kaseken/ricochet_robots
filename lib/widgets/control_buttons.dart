@@ -5,11 +5,13 @@ import 'package:ricochet_robots/models/robot.dart';
 class ControlButtons extends StatelessWidget {
   final Function(RobotColors color) onColorSelected;
   final Function(Directions direction) onDirectionSelected;
+  final Function() onRedoPressed;
 
   const ControlButtons({
     Key? key,
     required this.onColorSelected,
     required this.onDirectionSelected,
+    required this.onRedoPressed,
   }) : super(key: key);
 
   List<Expanded> _buildColorButtons(List<RobotColors> colors) {
@@ -140,7 +142,7 @@ class ControlButtons extends StatelessWidget {
                           backgroundColor: MaterialStateProperty.all<Color>(
                               Colors.grey), // TODO: change color.
                         ),
-                        onPressed: () => {},
+                        onPressed: onRedoPressed,
                         child: const SizedBox(
                           height: 108,
                           child: Icon(

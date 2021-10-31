@@ -59,6 +59,16 @@ class _State extends State<GameWidget> {
     });
   }
 
+  void _onRedoPressed() {
+    if (_histories.isEmpty) {
+      return;
+    }
+    setState(() {
+      final prevHistory = _histories.removeLast();
+      board.moveTo(Robot(color: prevHistory.color), prevHistory.position);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -79,6 +89,7 @@ class _State extends State<GameWidget> {
             ControlButtons(
               onColorSelected: _onColorSelected,
               onDirectionSelected: _onDirectionSelected,
+              onRedoPressed: _onRedoPressed,
             ),
           ],
         ),

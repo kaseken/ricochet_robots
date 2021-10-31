@@ -44,6 +44,10 @@ class Board {
     return robotPositions;
   }
 
+  void moveTo(Robot robot, Position position) {
+    robotPositions[robot.color] = position;
+  }
+
   bool isGoal(Position position, Goal goal) {
     return grids[position.y][position.x].isGoal(goal);
   }
