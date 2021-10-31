@@ -21,21 +21,27 @@ class Board {
     };
   }
 
-  bool move(Robot robot, Directions direction) {
+  RobotPositions move(Robot robot, Directions direction) {
     final position = robotPositions[robot.color];
     if (position == null) {
-      return false;
+      return robotPositions;
     }
-    final currentGrid = grids[position.y][position.x];
-    if (currentGrid.canMove(direction)) {
-      return false;
-    }
+    final otherRobotPositions = robotPositions.entries
+        .where((e) => e.key != robot.color)
+        .map((e) => e.value);
     var to = position; // TODO: make it immutable.
     while (grids[to.y][to.x].canMove(direction)) {
       to = to.next(direction);
+      // TODO: refactor
+      final otherRobotExists = otherRobotPositions
+          .where((p) => p.x == to.x && p.y == to.y)
+          .isNotEmpty;
+      if (otherRobotExists) {
+        return robotPositions;
+      }
+      robotPositions[robot.color] = to;
     }
-    robotPositions[robot.color] = to;
-    return true;
+    return robotPositions;
   }
 
   bool isGoal(Position position, Goal goal) {

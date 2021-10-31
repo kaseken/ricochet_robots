@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/models/board.dart';
 import 'package:ricochet_robots/models/goal.dart';
+import 'package:ricochet_robots/models/position.dart';
 import 'package:ricochet_robots/models/robot.dart';
 import 'package:ricochet_robots/widgets/board_widget.dart';
 import 'package:ricochet_robots/widgets/control_buttons.dart';
@@ -20,6 +21,26 @@ class _State extends State<GameWidget> {
     color: RobotColors.red,
     type: GoalTypes.sun,
   );
+  var focusedRobot = const Robot(color: RobotColors.red);
+  late RobotPositions robotPositions;
+
+  @override
+  void initState() {
+    super.initState();
+    robotPositions = board.robotPositions;
+  }
+
+  void _onColorSelected(RobotColors color) {
+    setState(() {
+      focusedRobot = Robot(color: color);
+    });
+  }
+
+  void _onDirectionSelected(Directions direction) {
+    setState(() {
+      robotPositions = board.move(focusedRobot, direction);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +53,16 @@ class _State extends State<GameWidget> {
             Expanded(
               child: AspectRatio(
                 aspectRatio: 1,
-                child: BoardWidget(board: board),
+                child: BoardWidget(
+                  board: board,
+                  robotPositions: robotPositions,
+                ),
               ),
             ),
-            const ControlButtons(),
+            ControlButtons(
+              onColorSelected: _onColorSelected,
+              onDirectionSelected: _onDirectionSelected,
+            ),
           ],
         ),
       ),
