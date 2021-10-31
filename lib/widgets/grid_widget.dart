@@ -6,9 +6,12 @@ import 'package:ricochet_robots/models/robot.dart';
 
 class GridWidget extends StatelessWidget {
   final Grid grid;
+  final Robot? robot;
+
   const GridWidget({
     Key? key,
     required this.grid,
+    this.robot,
   }) : super(key: key);
 
   Border _buildBorder(Grid grid) {
@@ -25,14 +28,7 @@ class GridWidget extends StatelessWidget {
     );
   }
 
-  Color _color(Grid grid) {
-    if (grid is NormalGoalGrid) {
-      return getActualColor(grid.color);
-    }
-    return Colors.transparent;
-  }
-
-  Widget _icons(Grid grid) {
+  Widget _buildGoal(Grid grid) {
     if (grid is NormalGoalGrid) {
       final iconData = getIcon(grid.type);
       if (iconData != null) {
@@ -55,6 +51,23 @@ class GridWidget extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
+  Widget _buildRobot(Grid grid, Robot? robot) {
+    if (robot != null) {
+      return Container(
+        decoration: BoxDecoration(
+          color: getActualColor(robot.color),
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: const Icon(
+          Icons.android_outlined,
+          color: Colors.white,
+          size: 20,
+        ),
+      );
+    }
+    return const SizedBox.shrink();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -70,7 +83,13 @@ class GridWidget extends StatelessWidget {
               Positioned.fill(
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: _icons(grid),
+                  child: _buildGoal(grid),
+                ),
+              ),
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: _buildRobot(grid, robot),
                 ),
               )
             ],

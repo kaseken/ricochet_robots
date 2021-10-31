@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/models/board.dart';
 import 'package:ricochet_robots/models/grid.dart';
+import 'package:ricochet_robots/models/robot.dart';
 import 'package:ricochet_robots/widgets/grid_widget.dart';
 
 class BoardWidget extends StatelessWidget {
@@ -11,9 +12,22 @@ class BoardWidget extends StatelessWidget {
     required this.board,
   }) : super(key: key);
 
-  Widget _buildRow(List<Grid> row) {
+  Robot? _robot(int x, int y) {
+    final robotPositions = board.robotPositions.entries;
+    for (final robot in robotPositions) {
+      if (robot.value.x == x && robot.value.y == y) {
+        return Robot(color: robot.key);
+      }
+    }
+    return null;
+  }
+
+  Widget _buildRow(List<Grid> row, int y) {
     return Row(
-      children: row.map((g) => GridWidget(grid: g)).toList(),
+      children: List.generate(
+        row.length,
+        (x) => GridWidget(grid: row[x], robot: _robot(x, y)),
+      ),
     );
   }
 
@@ -22,7 +36,10 @@ class BoardWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
-        children: board.grids.map((row) => _buildRow(row)).toList(),
+        children: List.generate(
+          board.grids.length,
+          (y) => _buildRow(board.grids[y], y),
+        ),
       ),
     );
   }
