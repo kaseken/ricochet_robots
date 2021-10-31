@@ -15,7 +15,7 @@ class GridWidget extends StatelessWidget {
   }) : super(key: key);
 
   Border _buildBorder(Grid grid) {
-    const wall = BorderSide(width: 1, color: Colors.grey);
+    const wall = BorderSide(width: 1.0, color: Colors.grey);
     const border = BorderSide(
       width: 0.5,
       color: Color.fromRGBO(230, 230, 230, 1.0), // TODO: adjust color.
@@ -32,19 +32,22 @@ class GridWidget extends StatelessWidget {
     if (grid is NormalGoalGrid) {
       final iconData = getIcon(grid.type);
       // TODO: change icon to image.
-      return Icon(
-        iconData,
-        color: getActualColor(grid.color),
-        size: 20,
-      );
+      return LayoutBuilder(builder: (context, constraint) {
+        return Icon(
+          iconData,
+          color: getActualColor(grid.color),
+          size: constraint.biggest.height,
+        );
+      });
     }
     if (grid is WildGoalGrid) {
-      // TODO: change icon to image.
-      return const Icon(
-        Icons.help,
-        color: Colors.deepPurple,
-        size: 20,
-      );
+      return LayoutBuilder(builder: (context, constraint) {
+        return Icon(
+          Icons.help,
+          color: Colors.deepPurple,
+          size: constraint.biggest.height,
+        );
+      });
     }
     return const SizedBox.shrink();
   }
@@ -56,11 +59,13 @@ class GridWidget extends StatelessWidget {
           color: getActualColor(robot.color),
           borderRadius: BorderRadius.circular(4.0),
         ),
-        child: const Icon(
-          Icons.android_outlined,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: LayoutBuilder(builder: (context, constraint) {
+          return Icon(
+            Icons.android_outlined,
+            color: Colors.white,
+            size: constraint.biggest.height,
+          );
+        }),
       );
     }
     return const SizedBox.shrink();
