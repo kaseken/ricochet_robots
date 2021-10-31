@@ -12,12 +12,13 @@ class Board {
 
   Board() {
     grids = BoardBuilder.buildGrids();
-    // TODO: set positions randomly.
+    final positions = BoardBuilder.buildInitialPositions(grids);
+    assert(positions.length == 4);
     robotPositions = {
-      RobotColors.red: const Position(x: 3, y: 3),
-      RobotColors.blue: const Position(x: 12, y: 3),
-      RobotColors.green: const Position(x: 3, y: 12),
-      RobotColors.yellow: const Position(x: 12, y: 12),
+      RobotColors.red: positions[0],
+      RobotColors.blue: positions[1],
+      RobotColors.green: positions[2],
+      RobotColors.yellow: positions[3],
     };
   }
 

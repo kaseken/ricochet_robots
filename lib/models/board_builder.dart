@@ -1,8 +1,27 @@
+import 'dart:math';
+
 import 'package:ricochet_robots/models/goal.dart';
 import 'package:ricochet_robots/models/grid.dart';
+import 'package:ricochet_robots/models/position.dart';
 import 'package:ricochet_robots/models/robot.dart';
 
 class BoardBuilder {
+  static List<Position> buildInitialPositions(List<List<Grid>> grids) {
+    final List<Position> positions = List.empty(growable: true);
+    final random = Random();
+    while (positions.length < 4) {
+      final x = random.nextInt(16);
+      final y = random.nextInt(16);
+      if (positions.where((p) => p.x == x && p.y == y).isNotEmpty) {
+        continue;
+      }
+      if (grids[y][x] is NormalGrid) {
+        positions.add(Position(x: x, y: y));
+      }
+    }
+    return positions;
+  }
+
   // TODO: change patterns randomly.
   static List<List<Grid>> buildGrids() {
     return [
