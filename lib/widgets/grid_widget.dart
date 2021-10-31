@@ -71,6 +71,13 @@ class GridWidget extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
+  Color _gridColor(Grid grid) {
+    if (grid is CenterGrid) {
+      return Colors.grey;
+    }
+    return Colors.transparent;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -78,6 +85,7 @@ class GridWidget extends StatelessWidget {
         aspectRatio: 1.0,
         child: Container(
           decoration: BoxDecoration(
+            color: _gridColor(grid),
             border: _buildBorder(grid),
           ),
           child: Stack(

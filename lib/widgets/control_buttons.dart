@@ -22,12 +22,20 @@ class ControlButtons extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(getActualColor(color)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    getActualColor(color),
+                  ),
+                  padding: MaterialStateProperty.all(EdgeInsets.zero),
+                  alignment: Alignment.center,
                 ),
                 onPressed: () => onColorSelected(color),
                 child: const SizedBox(
                   height: 50,
+                  child: Icon(
+                    Icons.android_outlined,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
               ),
             ),
@@ -72,8 +80,11 @@ class ControlButtons extends StatelessWidget {
               child: ElevatedButton(
                 style: ButtonStyle(
                   // TODO: change color.
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.grey),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Colors.grey,
+                  ),
+                  padding: MaterialStateProperty.all(EdgeInsets.zero),
+                  alignment: Alignment.center,
                 ),
                 onPressed: () => onDirectionSelected(direction),
                 child: SizedBox(
@@ -141,7 +152,10 @@ class ControlButtons extends StatelessWidget {
                       child: ElevatedButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.grey), // TODO: change color.
+                            Colors.grey,
+                          ), // TODO: change color.
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          alignment: Alignment.center,
                         ),
                         onPressed: onRedoPressed,
                         child: const SizedBox(
