@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:ricochet_robots/models/board_builder.dart';
 import 'package:ricochet_robots/models/goal.dart';
 import 'package:ricochet_robots/models/grid.dart';
@@ -69,5 +70,27 @@ class Board {
 
   bool isGoal(Position position, Goal goal, Robot robot) {
     return grids[position.y][position.x].isGoal(goal, robot);
+  }
+
+  bool hasRobotOnGrid(Position position) => getRobotIfExists(position) != null;
+  Robot? getRobotIfExists(Position position) {
+    return robotPositions.entries
+        .where((entry) {
+          return entry.value.x == position.x && entry.value.y == position.y;
+        })
+        .map((p) => Robot(color: p.key))
+        .firstOrNull;
+  }
+
+  bool hasGoalOnGrid(Position position) => getGoalGridIfExists(position) != null;
+  GoalGrid? getGoalGridIfExists(Position position) {
+    final grid = grids[position.y][position.x];
+    if (grid is NormalGoalGrid) {
+      return grid;
+    }
+    if (grid is WildGoalGrid) {
+      return grid;
+    }
+    return null;
   }
 }

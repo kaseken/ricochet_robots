@@ -20,13 +20,15 @@ class GameWidget extends StatefulWidget {
 
 class _State extends State<GameWidget> {
   GameWidgetMode _mode = GameWidgetMode.play;
+  bool get isEditMode => _mode == GameWidgetMode.editBoard;
 
   late Board _board;
   late Goal _goal;
   late List<History> _histories;
   late Robot _focusedRobot;
 
-  Board? _customBoard;
+  late Board _customBoard;
+  Robot? _selectedRobotForEdit;
 
   void _onColorSelected(RobotColors color) {
     setState(() {
@@ -41,9 +43,10 @@ class _State extends State<GameWidget> {
   }
 
   void _reset({Board? newBoard}) {
-    /// TODO: Retrieve _customBoard from URL.
+    /// TODO: Retrieve newBoard from URL.
     setState(() {
       _board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
+      _customBoard = _board;
       _goal = GoalBuilder.build();
       _histories = List.empty(growable: true);
       _focusedRobot = const Robot(color: RobotColors.red);
@@ -62,6 +65,30 @@ class _State extends State<GameWidget> {
         return setState(() {
           _mode = GameWidgetMode.play;
         });
+    }
+  }
+
+  void _onTapGrid({required int x, required int y}) {
+    final tappedPosition = Position(x: x, y: y);
+    final maybeExistingRobot = _customBoard.getRobotIfExists(tappedPosition);
+    if (maybeExistingRobot != null) {
+      /// Select robot on tapped grid.
+      return setState(() {
+        _selectedRobotForEdit = maybeExistingRobot;
+      });
+    }
+
+    final selectedRobot = _selectedRobotForEdit;
+    if (selectedRobot != null) {
+      if (_customBoard.hasGoalOnGrid(tappedPosition)) {
+        /// Skip if already has goal.
+        return;
+      }
+      return setState(() {
+        /// Move robot to tapped position.
+        _customBoard = _customBoard.movedTo(selectedRobot, tappedPosition);
+        _selectedRobotForEdit = null;
+      });
     }
   }
 
@@ -150,7 +177,10 @@ class _State extends State<GameWidget> {
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: BoardWidget(board: _board),
+                  child: BoardWidget(
+                    board: isEditMode ? _customBoard : _board,
+                    onTapGrid: _onTapGrid,
+                  ),
                 ),
               ),
               _buildFooter(currentMode: _mode),
