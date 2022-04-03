@@ -27,7 +27,7 @@ class _State extends State<GameWidget> {
   late List<History> _histories;
   late Robot _focusedRobot;
 
-  late Board _customBoard;
+  late Board _editingBoard;
   Robot? _selectedRobotForEdit;
 
   void _onColorSelected(RobotColors color) {
@@ -46,7 +46,7 @@ class _State extends State<GameWidget> {
     /// TODO: Retrieve newBoard from URL.
     setState(() {
       _board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
-      _customBoard = _board;
+      _editingBoard = _board;
       _goal = GoalBuilder.build();
       _histories = List.empty(growable: true);
       _focusedRobot = const Robot(color: RobotColors.red);
@@ -57,11 +57,11 @@ class _State extends State<GameWidget> {
     switch (from) {
       case GameWidgetMode.play:
         return setState(() {
-          _customBoard = _board;
+          _editingBoard = _board;
           _mode = GameWidgetMode.editBoard;
         });
       case GameWidgetMode.editBoard:
-        _reset(newBoard: _customBoard);
+        _reset(newBoard: _editingBoard);
         return setState(() {
           _mode = GameWidgetMode.play;
         });
@@ -70,7 +70,7 @@ class _State extends State<GameWidget> {
 
   void _onTapGrid({required int x, required int y}) {
     final tappedPosition = Position(x: x, y: y);
-    final maybeExistingRobot = _customBoard.getRobotIfExists(tappedPosition);
+    final maybeExistingRobot = _editingBoard.getRobotIfExists(tappedPosition);
     if (maybeExistingRobot != null) {
       /// Select robot on tapped grid.
       return setState(() {
@@ -80,13 +80,13 @@ class _State extends State<GameWidget> {
 
     final selectedRobot = _selectedRobotForEdit;
     if (selectedRobot != null) {
-      if (_customBoard.hasGoalOnGrid(tappedPosition)) {
+      if (_editingBoard.hasGoalOnGrid(tappedPosition)) {
         /// Skip if already has goal.
         return;
       }
       return setState(() {
         /// Move robot to tapped position.
-        _customBoard = _customBoard.movedTo(selectedRobot, tappedPosition);
+        _editingBoard = _editingBoard.movedTo(selectedRobot, tappedPosition);
         _selectedRobotForEdit = null;
       });
     }
@@ -178,7 +178,7 @@ class _State extends State<GameWidget> {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: BoardWidget(
-                    board: isEditMode ? _customBoard : _board,
+                    board: isEditMode ? _editingBoard : _board,
                     onTapGrid: isEditMode ? _onTapGrid : null,
                   ),
                 ),
