@@ -5,7 +5,7 @@ import 'package:ricochet_robots/models/position.dart';
 void main() {
   group('BoardBuilder', () {
     test('buildGrids', () {
-      final grids = BoardBuilder.buildGrids();
+      final grids = BoardBuilder.buildDefaultGrids();
       expect(grids.length, equals(16));
       grids.asMap().forEach((y, row) {
         expect(row.length, equals(16));
