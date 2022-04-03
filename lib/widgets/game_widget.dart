@@ -69,7 +69,7 @@ class _State extends State<GameWidget> {
       return;
     }
     setState(() {
-      _board.move(_focusedRobot, direction);
+      _board = _board.moved(_focusedRobot, direction);
       final nextPosition = _board.robotPositions[_focusedRobot.color];
       if (nextPosition == null) {
         return;
@@ -107,9 +107,12 @@ class _State extends State<GameWidget> {
     if (_histories.isEmpty) {
       return;
     }
+    final prevHistory = _histories.removeLast();
     setState(() {
-      final prevHistory = _histories.removeLast();
-      _board.moveTo(Robot(color: prevHistory.color), prevHistory.position);
+      _board = _board.movedTo(
+        Robot(color: prevHistory.color),
+        prevHistory.position,
+      );
     });
   }
 
