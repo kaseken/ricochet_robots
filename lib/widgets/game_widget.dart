@@ -8,6 +8,8 @@ import 'package:ricochet_robots/widgets/board_widget.dart';
 import 'package:ricochet_robots/widgets/control_buttons.dart';
 import 'package:ricochet_robots/widgets/header_widget.dart';
 
+enum GameWidgetMode { play, editBoard }
+
 class GameWidget extends StatefulWidget {
   const GameWidget({Key? key}) : super(key: key);
 
@@ -16,8 +18,9 @@ class GameWidget extends StatefulWidget {
 }
 
 class _State extends State<GameWidget> {
+  GameWidgetMode _mode = GameWidgetMode.play;
+
   late Board _board;
-  // TODO: set goal randomly.
   late Goal _goal;
   late List<History> _histories;
   late Robot _focusedRobot;
@@ -41,6 +44,19 @@ class _State extends State<GameWidget> {
       _histories = List.empty(growable: true);
       _focusedRobot = const Robot(color: RobotColors.red);
     });
+  }
+
+  void _switchMode({required GameWidgetMode from}) {
+    switch (from) {
+      case GameWidgetMode.play:
+        return setState(() {
+          _mode = GameWidgetMode.editBoard;
+        });
+      case GameWidgetMode.editBoard:
+        return setState(() {
+          _mode = GameWidgetMode.play;
+        });
+    }
   }
 
   void _onDirectionSelected(Directions direction) {
@@ -93,6 +109,19 @@ class _State extends State<GameWidget> {
     });
   }
 
+  Widget _buildFooter({required GameWidgetMode currentMode}) {
+    switch (currentMode) {
+      case GameWidgetMode.play:
+        return ControlButtons(
+          onColorSelected: _onColorSelected,
+          onDirectionSelected: _onDirectionSelected,
+          onRedoPressed: _onRedoPressed,
+        );
+      case GameWidgetMode.editBoard:
+        return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -106,6 +135,8 @@ class _State extends State<GameWidget> {
               HeaderWidget(
                 goal: _goal,
                 histories: _histories,
+                currentMode: _mode,
+                switchMode: _switchMode,
               ),
               Expanded(
                 child: AspectRatio(
@@ -116,11 +147,7 @@ class _State extends State<GameWidget> {
                   ),
                 ),
               ),
-              ControlButtons(
-                onColorSelected: _onColorSelected,
-                onDirectionSelected: _onDirectionSelected,
-                onRedoPressed: _onRedoPressed,
-              ),
+              _buildFooter(currentMode: _mode),
             ],
           ),
         ),
