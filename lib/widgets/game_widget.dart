@@ -40,10 +40,10 @@ class _State extends State<GameWidget> {
     _reset();
   }
 
-  void _reset() {
+  void _reset({Board? newBoard}) {
     /// TODO: Retrieve _customBoard from URL.
     setState(() {
-      _board = _customBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
+      _board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
       _goal = GoalBuilder.build();
       _histories = List.empty(growable: true);
       _focusedRobot = const Robot(color: RobotColors.red);
@@ -54,9 +54,11 @@ class _State extends State<GameWidget> {
     switch (from) {
       case GameWidgetMode.play:
         return setState(() {
+          _customBoard = _board;
           _mode = GameWidgetMode.editBoard;
         });
       case GameWidgetMode.editBoard:
+        _reset(newBoard: _customBoard);
         return setState(() {
           _mode = GameWidgetMode.play;
         });
