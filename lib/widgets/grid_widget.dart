@@ -26,6 +26,8 @@ class _State extends State<GridWidget> {
   bool get hasRobot => widget.robot != null;
   bool get isGoal =>
       widget.grid is NormalGoalGrid || widget.grid is WildGoalGrid;
+  bool get hasItem => hasRobot || isGoal || widget.grid is CenterGrid;
+  bool get isTappable => widget.grid is! CenterGrid;
 
   Border _buildBorder(Grid grid) {
     const wall = BorderSide(width: 1.0, color: Colors.grey);
@@ -103,7 +105,7 @@ class _State extends State<GridWidget> {
     final maybeOverlay = widget.overlay;
     return Expanded(
       child: InkWell(
-        onTap: widget.onTapGrid ?? () {},
+        onTap: isTappable ? (widget.onTapGrid ?? () => {}) : null,
         onHover: _onHover,
         child: AspectRatio(
           aspectRatio: 1.0,
@@ -129,7 +131,7 @@ class _State extends State<GridWidget> {
                 ),
 
                 /// Overlay is used in edit mode. Shows semi-transparent overlay.
-                if (maybeOverlay != null && _isHovering && !hasRobot && !isGoal)
+                if (maybeOverlay != null && _isHovering && !hasItem)
                   Positioned.fill(
                     child: Opacity(
                       opacity: 0.2,
