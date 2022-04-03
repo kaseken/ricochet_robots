@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/models/board.dart';
+import 'package:ricochet_robots/models/board_builder.dart';
 import 'package:ricochet_robots/models/goal.dart';
 import 'package:ricochet_robots/models/history.dart';
 import 'package:ricochet_robots/models/position.dart';
@@ -25,6 +26,8 @@ class _State extends State<GameWidget> {
   late List<History> _histories;
   late Robot _focusedRobot;
 
+  Board? _customBoard;
+
   void _onColorSelected(RobotColors color) {
     setState(() {
       _focusedRobot = Robot(color: color);
@@ -38,8 +41,9 @@ class _State extends State<GameWidget> {
   }
 
   void _reset() {
+    /// TODO: Retrieve _customBoard from URL.
     setState(() {
-      _board = Board();
+      _board = _customBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
       _goal = GoalBuilder.build();
       _histories = List.empty(growable: true);
       _focusedRobot = const Robot(color: RobotColors.red);
@@ -141,10 +145,7 @@ class _State extends State<GameWidget> {
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: BoardWidget(
-                    board: _board,
-                    robotPositions: _board.robotPositions,
-                  ),
+                  child: BoardWidget(board: _board),
                 ),
               ),
               _buildFooter(currentMode: _mode),

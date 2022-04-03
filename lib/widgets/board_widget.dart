@@ -6,16 +6,14 @@ import 'package:ricochet_robots/widgets/grid_widget.dart';
 
 class BoardWidget extends StatelessWidget {
   final Board board;
-  final RobotPositions robotPositions;
 
   const BoardWidget({
     Key? key,
     required this.board,
-    required this.robotPositions,
   }) : super(key: key);
 
   Robot? _robot(int x, int y) {
-    for (final robot in robotPositions.entries) {
+    for (final robot in board.robotPositions.entries) {
       if (robot.value.x == x && robot.value.y == y) {
         return Robot(color: robot.key);
       }

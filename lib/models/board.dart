@@ -6,12 +6,13 @@ import 'package:ricochet_robots/models/robot.dart';
 
 typedef RobotPositions = Map<RobotColors, Position>;
 
+typedef Grids = List<List<Grid>>;
+
 class Board {
-  late final List<List<Grid>> grids;
+  final Grids grids;
   late final RobotPositions robotPositions;
 
-  Board() {
-    grids = BoardBuilder.buildGrids();
+  Board({required this.grids}) {
     final positions = BoardBuilder.buildInitialPositions(grids);
     assert(positions.length == 4);
     robotPositions = {

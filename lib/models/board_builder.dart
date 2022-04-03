@@ -22,8 +22,7 @@ class BoardBuilder {
     return positions;
   }
 
-  // TODO: change patterns randomly.
-  static List<List<Grid>> buildGrids() {
+  static List<List<Grid>> buildDefaultGrids() {
     return [
       [
         NormalGrid(canMoveUp: false, canMoveLeft: false),
