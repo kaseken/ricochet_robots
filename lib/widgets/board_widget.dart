@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/models/board.dart';
 import 'package:ricochet_robots/models/grid.dart';
+import 'package:ricochet_robots/models/position.dart';
 import 'package:ricochet_robots/models/robot.dart';
 import 'package:ricochet_robots/widgets/grid_widget.dart';
 
@@ -14,14 +15,7 @@ class BoardWidget extends StatelessWidget {
     required this.onTapGrid,
   }) : super(key: key);
 
-  Robot? _robot(int x, int y) {
-    for (final robot in board.robotPositions.entries) {
-      if (robot.value.x == x && robot.value.y == y) {
-        return Robot(color: robot.key);
-      }
-    }
-    return null;
-  }
+  Robot? _robot(int x, int y) => board.getRobotIfExists(Position(x: x, y: y));
 
   Widget _buildRow(List<Grid> row, int y) {
     return Row(
@@ -30,13 +24,15 @@ class BoardWidget extends StatelessWidget {
         (x) => GridWidget(
           grid: row[x],
           robot: _robot(x, y),
-          onTapGrid: onTapGrid == null ? null : () {
-            final onTap = onTapGrid;
-            if (onTap == null) {
-              return;
-            }
-            onTap(x: x, y: y);
-          },
+          onTapGrid: onTapGrid == null
+              ? null
+              : () {
+                  final onTap = onTapGrid;
+                  if (onTap == null) {
+                    return;
+                  }
+                  onTap(x: x, y: y);
+                },
         ),
       ),
     );
