@@ -179,7 +179,7 @@ class _State extends State<GameWidget> {
                   aspectRatio: 1,
                   child: BoardWidget(
                     board: isEditMode ? _customBoard : _board,
-                    onTapGrid: _onTapGrid,
+                    onTapGrid: isEditMode ? _onTapGrid : null,
                   ),
                 ),
               ),

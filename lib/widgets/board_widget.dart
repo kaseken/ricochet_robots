@@ -6,7 +6,7 @@ import 'package:ricochet_robots/widgets/grid_widget.dart';
 
 class BoardWidget extends StatelessWidget {
   final Board board;
-  final void Function({required int x, required int y}) onTapGrid;
+  final void Function({required int x, required int y})? onTapGrid;
 
   const BoardWidget({
     Key? key,
@@ -30,7 +30,13 @@ class BoardWidget extends StatelessWidget {
         (x) => GridWidget(
           grid: row[x],
           robot: _robot(x, y),
-          onTapGrid: () => onTapGrid(x: x, y: y),
+          onTapGrid: onTapGrid == null ? null : () {
+            final onTap = onTapGrid;
+            if (onTap == null) {
+              return;
+            }
+            onTap(x: x, y: y);
+          },
         ),
       ),
     );

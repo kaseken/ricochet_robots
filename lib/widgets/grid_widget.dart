@@ -100,12 +100,19 @@ class _State extends State<GridWidget> {
     });
   }
 
+  void Function()? _onTapGrid() {
+    if (isTappable && widget.onTapGrid != null) {
+      return widget.onTapGrid;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final maybeOverlay = widget.overlay;
     return Expanded(
       child: InkWell(
-        onTap: isTappable ? (widget.onTapGrid ?? () => {}) : null,
+        onTap: _onTapGrid(),
         onHover: _onHover,
         child: AspectRatio(
           aspectRatio: 1.0,
