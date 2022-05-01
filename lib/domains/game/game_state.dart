@@ -8,7 +8,7 @@ import 'package:ricochet_robots/models/robot.dart';
 
 part 'game_state.freezed.dart';
 
-enum GameWidgetMode { play, showResult, editBoard }
+enum GameWidgetMode { play, showResult }
 
 @freezed
 class GameState with _$GameState {
@@ -22,13 +22,7 @@ class GameState with _$GameState {
     required Goal goal,
     required List<History> histories,
     required Robot focusedRobot,
-
-    /// Properties for editing.
-    required Board customBoard,
-    required Robot? selectedRobotForEdit,
   }) = _GameState;
-
-  bool get isEditMode => mode == GameWidgetMode.editBoard;
 
   bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
@@ -43,21 +37,7 @@ class GameState with _$GameState {
       goal: GoalBuilder.build(),
       histories: List.empty(growable: true),
       focusedRobot: const Robot(color: RobotColors.red),
-      customBoard: board,
-      selectedRobotForEdit: null,
     );
-  }
-
-  /// Switches from the given mode, and returns new state.
-  GameState switchMode() {
-    switch (mode) {
-      case GameWidgetMode.play:
-        return copyWith(customBoard: board, mode: GameWidgetMode.editBoard);
-      case GameWidgetMode.showResult:
-        return this;
-      case GameWidgetMode.editBoard:
-        return _reset(newBoard: customBoard, mode: GameWidgetMode.play);
-    }
   }
 
   GameState onColorSelected({required RobotColors color}) =>

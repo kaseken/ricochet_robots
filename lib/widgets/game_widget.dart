@@ -17,19 +17,13 @@ class GameWidget extends StatelessWidget {
     required GameWidgetMode currentMode,
   }) {
     final bloc = context.read<GameBloc>();
-    switch (currentMode) {
-      case GameWidgetMode.play:
-      case GameWidgetMode.showResult:
-        return ControlButtons(
-          onColorSelected: ({required RobotColors color}) =>
-              bloc.add(SelectColorEvent(color: color)),
-          onDirectionSelected: ({required Directions direction}) =>
-              bloc.add(SelectDirectionEvent(direction: direction)),
-          onRedoPressed: () => bloc.add(const RedoEvent()),
-        );
-      case GameWidgetMode.editBoard:
-        return const SizedBox.shrink();
-    }
+    return ControlButtons(
+      onColorSelected: ({required RobotColors color}) =>
+          bloc.add(SelectColorEvent(color: color)),
+      onDirectionSelected: ({required Directions direction}) =>
+          bloc.add(SelectDirectionEvent(direction: direction)),
+      onRedoPressed: () => bloc.add(const RedoEvent()),
+    );
   }
 
   @override
@@ -59,11 +53,7 @@ class GameWidget extends StatelessWidget {
                       Expanded(
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: BoardWidget(
-                            board: state.isEditMode
-                                ? state.customBoard
-                                : state.board,
-                          ),
+                          child: BoardWidget(board: state.board),
                         ),
                       ),
                       _buildFooter(
