@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/models/position.dart';
 import 'package:ricochet_robots/models/robot.dart';
 
 class ControlButtons extends StatelessWidget {
-  final void Function({required RobotColors color}) onColorSelected;
-  final void Function({required Directions direction}) onDirectionSelected;
-  final void Function() onRedoPressed;
+  const ControlButtons({Key? key}) : super(key: key);
 
-  const ControlButtons({
-    Key? key,
-    required this.onColorSelected,
-    required this.onDirectionSelected,
-    required this.onRedoPressed,
-  }) : super(key: key);
+  void _onColorSelected({
+    required BuildContext context,
+    required RobotColors color,
+  }) {
+    context.read<GameBloc>().add(SelectColorEvent(color: color));
+  }
 
-  List<Expanded> _buildColorButtons(List<RobotColors> colors) {
+  void _onDirectionSelected({
+    required BuildContext context,
+    required Directions direction,
+  }) {
+    context.read<GameBloc>().add(SelectDirectionEvent(direction: direction));
+  }
+
+  void _onRedoPressed({required BuildContext context}) =>
+      context.read<GameBloc>().add(const RedoEvent());
+
+  List<Expanded> _buildColorButtons({
+    required BuildContext context,
+    required List<RobotColors> colors,
+  }) {
     return colors
         .map(
           (color) => Expanded(
@@ -28,7 +41,10 @@ class ControlButtons extends StatelessWidget {
                   padding: MaterialStateProperty.all(EdgeInsets.zero),
                   alignment: Alignment.center,
                 ),
-                onPressed: () => onColorSelected(color: color),
+                onPressed: () => _onColorSelected(
+                  context: context,
+                  color: color,
+                ),
                 child: const SizedBox(
                   height: 30,
                   child: Icon(
@@ -44,7 +60,10 @@ class ControlButtons extends StatelessWidget {
         .toList();
   }
 
-  List<Widget> _buildDirectionButtons(List<Directions> directions) {
+  List<Widget> _buildDirectionButtons({
+    required BuildContext context,
+    required List<Directions> directions,
+  }) {
     IconData? _getLabel(Directions direction) {
       switch (direction) {
         case Directions.up:
@@ -86,7 +105,10 @@ class ControlButtons extends StatelessWidget {
                   padding: MaterialStateProperty.all(EdgeInsets.zero),
                   alignment: Alignment.center,
                 ),
-                onPressed: () => onDirectionSelected(direction: direction),
+                onPressed: () => _onDirectionSelected(
+                  context: context,
+                  direction: direction,
+                ),
                 child: SizedBox(
                   height: 30,
                   child: _getIcon(direction),
@@ -108,13 +130,17 @@ class ControlButtons extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children:
-                    _buildColorButtons([RobotColors.red, RobotColors.blue]),
+                children: _buildColorButtons(
+                  context: context,
+                  colors: [RobotColors.red, RobotColors.blue],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children:
-                    _buildColorButtons([RobotColors.green, RobotColors.yellow]),
+                children: _buildColorButtons(
+                  context: context,
+                  colors: [RobotColors.green, RobotColors.yellow],
+                ),
               ),
             ],
           ),
@@ -125,17 +151,21 @@ class ControlButtons extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: _buildDirectionButtons([
-                  Directions.up,
-                ]),
+                children: _buildDirectionButtons(
+                  context: context,
+                  directions: [Directions.up],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _buildDirectionButtons([
-                  Directions.left,
-                  Directions.down,
-                  Directions.right,
-                ]),
+                children: _buildDirectionButtons(
+                  context: context,
+                  directions: [
+                    Directions.left,
+                    Directions.down,
+                    Directions.right,
+                  ],
+                ),
               ),
             ],
           ),
@@ -157,7 +187,7 @@ class ControlButtons extends StatelessWidget {
                           padding: MaterialStateProperty.all(EdgeInsets.zero),
                           alignment: Alignment.center,
                         ),
-                        onPressed: onRedoPressed,
+                        onPressed: () => _onRedoPressed(context: context),
                         child: const SizedBox(
                           height: 68,
                           child: Icon(
