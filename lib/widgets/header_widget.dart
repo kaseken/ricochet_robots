@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:ricochet_robots/domains/game/game_state.dart';
 import 'package:ricochet_robots/models/goal.dart';
 import 'package:ricochet_robots/models/history.dart';
 import 'package:ricochet_robots/models/robot.dart';
-import 'package:ricochet_robots/widgets/game_widget.dart';
 
 class HeaderWidget extends StatelessWidget {
   final Goal goal;
   final List<History> histories;
   final GameWidgetMode currentMode;
-  final void Function({required GameWidgetMode from}) switchMode;
 
   const HeaderWidget({
     Key? key,
     required this.goal,
     required this.histories,
     required this.currentMode,
-    required this.switchMode,
   }) : super(key: key);
 
   final _textStyle = const TextStyle(
@@ -64,11 +62,6 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 
-  Icon _switchModeIcon({required GameWidgetMode currentMode}) =>
-      currentMode == GameWidgetMode.play
-          ? const Icon(Icons.edit, color: Colors.grey)
-          : const Icon(Icons.play_circle_fill, color: Colors.green);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -84,19 +77,7 @@ class HeaderWidget extends StatelessWidget {
               _goal(goal),
             ],
           ),
-          Row(
-            children: [
-              Text(
-                "${histories.length.toString()} moves",
-                style: _textStyle,
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: () => switchMode(from: currentMode),
-                icon: _switchModeIcon(currentMode: currentMode),
-              ),
-            ],
-          ),
+          Text("${histories.length.toString()} moves", style: _textStyle),
         ],
       ),
     );

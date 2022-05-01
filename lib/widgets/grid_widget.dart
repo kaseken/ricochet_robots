@@ -7,15 +7,11 @@ import 'package:ricochet_robots/models/robot.dart';
 class GridWidget extends StatefulWidget {
   final Grid grid;
   final Robot? robot;
-  final Widget? overlay;
-  final void Function()? onTapGrid;
 
   const GridWidget({
     Key? key,
     required this.grid,
     this.robot,
-    this.overlay,
-    this.onTapGrid,
   }) : super(key: key);
 
   @override
@@ -93,63 +89,32 @@ class _State extends State<GridWidget> {
     return Colors.transparent;
   }
 
-  bool _isHovering = false;
-  void _onHover(bool isHovering) {
-    setState(() {
-      _isHovering = isHovering;
-    });
-  }
-
-  void Function()? _onTapGrid() {
-    if (isTappable && widget.onTapGrid != null) {
-      return widget.onTapGrid;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final maybeOverlay = widget.overlay;
     return Expanded(
-      child: InkWell(
-        onTap: _onTapGrid(),
-        onHover: _onHover,
-        child: AspectRatio(
-          aspectRatio: 1.0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: _gridColor(widget.grid),
-              border: _buildBorder(widget.grid),
-            ),
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Positioned.fill(
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: _buildGoal(widget.grid),
-                  ),
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: Container(
+          decoration: BoxDecoration(
+            color: _gridColor(widget.grid),
+            border: _buildBorder(widget.grid),
+          ),
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: _buildGoal(widget.grid),
                 ),
-                Positioned.fill(
-                  child: Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: _buildRobot(widget.robot),
-                  ),
+              ),
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: _buildRobot(widget.robot),
                 ),
-
-                /// Overlay is used in edit mode. Shows semi-transparent overlay.
-                if (maybeOverlay != null && _isHovering && !hasItem)
-                  Positioned.fill(
-                    child: Opacity(
-                      opacity: 0.2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: maybeOverlay,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

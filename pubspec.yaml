@@ -1,5 +1,5 @@
 name: ricochet_robots
-description: A new Flutter project.
+description: Ricochet robot in the web.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -8,12 +8,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
   collection: ^1.0.0
+  freezed_annotation: ^2.0.1
+  flutter_bloc: ^8.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  build_runner: ^2.1.10
+  freezed: ^2.0.2
 flutter:
   uses-material-design: true

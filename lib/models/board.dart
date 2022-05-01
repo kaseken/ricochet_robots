@@ -82,7 +82,8 @@ class Board {
         .firstOrNull;
   }
 
-  bool hasGoalOnGrid(Position position) => getGoalGridIfExists(position) != null;
+  bool hasGoalOnGrid(Position position) =>
+      getGoalGridIfExists(position) != null;
   GoalGrid? getGoalGridIfExists(Position position) {
     final grid = grids[position.y][position.x];
     if (grid is NormalGoalGrid) {

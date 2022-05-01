@@ -3,9 +3,9 @@ import 'package:ricochet_robots/models/position.dart';
 import 'package:ricochet_robots/models/robot.dart';
 
 class ControlButtons extends StatelessWidget {
-  final Function(RobotColors color) onColorSelected;
-  final Function(Directions direction) onDirectionSelected;
-  final Function() onRedoPressed;
+  final void Function({required RobotColors color}) onColorSelected;
+  final void Function({required Directions direction}) onDirectionSelected;
+  final void Function() onRedoPressed;
 
   const ControlButtons({
     Key? key,
@@ -28,7 +28,7 @@ class ControlButtons extends StatelessWidget {
                   padding: MaterialStateProperty.all(EdgeInsets.zero),
                   alignment: Alignment.center,
                 ),
-                onPressed: () => onColorSelected(color),
+                onPressed: () => onColorSelected(color: color),
                 child: const SizedBox(
                   height: 30,
                   child: Icon(
@@ -86,7 +86,7 @@ class ControlButtons extends StatelessWidget {
                   padding: MaterialStateProperty.all(EdgeInsets.zero),
                   alignment: Alignment.center,
                 ),
-                onPressed: () => onDirectionSelected(direction),
+                onPressed: () => onDirectionSelected(direction: direction),
                 child: SizedBox(
                   height: 30,
                   child: _getIcon(direction),
