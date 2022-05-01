@@ -91,20 +91,21 @@ class GameState with _$GameState {
       position: currentPosition,
     );
     final nextHistories = !nextPosition.equals(currentPosition)
-        ? (histories..add(history))
+        ? [...histories, history]
         : histories;
     if (board.isGoal(nextPosition, goal, focusedRobot)) {
-      return copyWith(board: nextBoard, histories: nextHistories);
+      return _reset();
     }
-    return _reset();
+    return copyWith(board: nextBoard, histories: nextHistories);
   }
 
   GameState onRedoPressed() {
     if (histories.isEmpty) {
       return this;
     }
-    final prevHistory = histories.removeLast();
+    final prevHistory = histories.last;
     return copyWith(
+      histories: histories.take(histories.length - 1).toList(),
       board: board.movedTo(
         Robot(color: prevHistory.color),
         prevHistory.position,
