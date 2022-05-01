@@ -5,29 +5,48 @@ import 'package:ricochet_robots/models/robot.dart';
 import '../../models/position.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  GameBloc() : super(GameState.init);
+  GameBloc() : super(GameState.init) {
+    on<SelectColorEvent>(
+      (event, emit) => emit(state.onColorSelected(color: event.color)),
+    );
+    on<SelectDirectionEvent>(
+      (event, emit) =>
+          emit(state.onDirectionSelected(direction: event.direction)),
+    );
+    on<SelectGridEvent>(
+      (event, emit) => emit(state.onTapGrid(position: event.position)),
+    );
+    on<RedoEvent>((event, emit) => emit(state.onRedoPressed()));
+    on<SwitchModeEvent>((event, emit) => emit(state.switchMode()));
+  }
 }
 
-abstract class GameEvent {}
+abstract class GameEvent {
+  const GameEvent();
+}
 
 class SelectColorEvent extends GameEvent {
   final RobotColors color;
 
-  SelectColorEvent({required this.color});
+  const SelectColorEvent({required this.color});
 }
 
 class SelectDirectionEvent extends GameEvent {
   final Directions direction;
 
-  SelectDirectionEvent({required this.direction});
+  const SelectDirectionEvent({required this.direction});
 }
 
 class SelectGridEvent extends GameEvent {
   final Position position;
 
-  SelectGridEvent({required this.position});
+  const SelectGridEvent({required this.position});
 }
 
-class RedoEvent extends GameEvent {}
+class RedoEvent extends GameEvent {
+  const RedoEvent();
+}
 
-class SwitchModeEvent extends GameEvent {}
+class SwitchModeEvent extends GameEvent {
+  const SwitchModeEvent();
+}

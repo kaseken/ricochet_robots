@@ -23,7 +23,7 @@ class GameWidget extends StatelessWidget {
               bloc.add(SelectColorEvent(color: color)),
           onDirectionSelected: ({required Directions direction}) =>
               bloc.add(SelectDirectionEvent(direction: direction)),
-          onRedoPressed: () => bloc.add(RedoEvent()),
+          onRedoPressed: () => bloc.add(const RedoEvent()),
         );
       case GameWidgetMode.editBoard:
         return const SizedBox.shrink();
@@ -47,7 +47,7 @@ class GameWidget extends StatelessWidget {
                     goal: state.goal,
                     histories: state.histories,
                     currentMode: state.mode,
-                    switchMode: () => bloc.add(SwitchModeEvent()),
+                    switchMode: () => bloc.add(const SwitchModeEvent()),
                   ),
                   Expanded(
                     child: AspectRatio(

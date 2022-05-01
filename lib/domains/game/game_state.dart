@@ -73,7 +73,10 @@ class GameState with _$GameState {
     );
   }
 
-  GameState onDirectionSelected(Directions direction) {
+  GameState onColorSelected({required RobotColors color}) =>
+      copyWith(focusedRobot: Robot(color: color));
+
+  GameState onDirectionSelected({required Directions direction}) {
     final currentPosition = board.robotPositions[focusedRobot.color];
     if (currentPosition == null) {
       return this;
