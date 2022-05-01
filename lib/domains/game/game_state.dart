@@ -30,8 +30,10 @@ class GameState with _$GameState {
 
   bool get isEditMode => mode == GameWidgetMode.editBoard;
 
+  static GameState get init => _reset();
+
   /// Reset state and returns new state.
-  static GameState reset({Board? newBoard}) {
+  static GameState _reset({Board? newBoard}) {
     final board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
     return GameState(
       mode: GameWidgetMode.play,
@@ -45,29 +47,28 @@ class GameState with _$GameState {
   }
 
   /// Switches from the given mode, and returns new state.
-  GameState switchMode({required GameWidgetMode from}) {
-    switch (from) {
+  GameState switchMode() {
+    switch (mode) {
       case GameWidgetMode.play:
         return copyWith(customBoard: board, mode: GameWidgetMode.editBoard);
       case GameWidgetMode.editBoard:
-        return reset(newBoard: customBoard);
+        return _reset(newBoard: customBoard);
     }
   }
 
-  GameState onTapGrid({required int x, required int y}) {
-    final tappedPosition = Position(x: x, y: y);
-    final maybeExistingRobot = customBoard.getRobotIfExists(tappedPosition);
+  GameState onTapGrid({required Position position}) {
+    final maybeExistingRobot = customBoard.getRobotIfExists(position);
     if (maybeExistingRobot != null) {
       /// Select robot on tapped grid.
       return copyWith(selectedRobotForEdit: maybeExistingRobot);
     }
 
     final selectedRobot = selectedRobotForEdit;
-    if (selectedRobot == null || customBoard.hasGoalOnGrid(tappedPosition)) {
+    if (selectedRobot == null || customBoard.hasGoalOnGrid(position)) {
       return this;
     }
     return copyWith(
-      customBoard: customBoard.movedTo(selectedRobot, tappedPosition),
+      customBoard: customBoard.movedTo(selectedRobot, position),
       selectedRobotForEdit: null,
     );
   }
@@ -92,7 +93,7 @@ class GameState with _$GameState {
     if (board.isGoal(nextPosition, goal, focusedRobot)) {
       return copyWith(board: nextBoard, histories: nextHistories);
     }
-    return reset();
+    return _reset();
   }
 
   GameState onRedoPressed() {

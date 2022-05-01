@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/widgets/game_widget.dart';
 
 void main() {
@@ -14,7 +16,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: const Home(title: 'Ricochet Robots Trainer'),
+      home: BlocProvider(
+        create: (BuildContext context) => GameBloc(),
+        child: const Home(title: 'Ricochet Robots Trainer'),
+      ),
     );
   }
 }

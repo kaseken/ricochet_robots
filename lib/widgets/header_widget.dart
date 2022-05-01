@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:ricochet_robots/domains/game/game_state.dart';
 import 'package:ricochet_robots/models/goal.dart';
 import 'package:ricochet_robots/models/history.dart';
 import 'package:ricochet_robots/models/robot.dart';
-import 'package:ricochet_robots/widgets/game_widget.dart';
 
 class HeaderWidget extends StatelessWidget {
   final Goal goal;
   final List<History> histories;
   final GameWidgetMode currentMode;
-  final void Function({required GameWidgetMode from}) switchMode;
+  final void Function() switchMode;
 
   const HeaderWidget({
     Key? key,
@@ -92,7 +92,7 @@ class HeaderWidget extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton(
-                onPressed: () => switchMode(from: currentMode),
+                onPressed: switchMode,
                 icon: _switchModeIcon(currentMode: currentMode),
               ),
             ],

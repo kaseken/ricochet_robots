@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/game/game_bloc.dart';
+import 'package:ricochet_robots/domains/game/game_state.dart';
+import 'package:ricochet_robots/models/position.dart';
+import 'package:ricochet_robots/models/robot.dart';
 import 'package:ricochet_robots/widgets/board_widget.dart';
 import 'package:ricochet_robots/widgets/control_buttons.dart';
 import 'package:ricochet_robots/widgets/header_widget.dart';
 
-enum GameWidgetMode { play, editBoard }
-
-class GameWidget extends StatefulWidget {
+class GameWidget extends StatelessWidget {
   const GameWidget({Key? key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _State();
-}
-
-class _State extends State<GameWidget> {
-  Widget _buildFooter({required GameWidgetMode currentMode}) {
+  Widget _buildFooter({
+    required BuildContext context,
+    required GameWidgetMode currentMode,
+  }) {
+    final bloc = context.read<GameBloc>();
     switch (currentMode) {
       case GameWidgetMode.play:
         return ControlButtons(
-          onColorSelected: _onColorSelected,
-          onDirectionSelected: _onDirectionSelected,
-          onRedoPressed: _onRedoPressed,
+          onColorSelected: ({required RobotColors color}) =>
+              bloc.add(SelectColorEvent(color: color)),
+          onDirectionSelected: ({required Directions direction}) =>
+              bloc.add(SelectDirectionEvent(direction: direction)),
+          onRedoPressed: () => bloc.add(RedoEvent()),
         );
       case GameWidgetMode.editBoard:
         return const SizedBox.shrink();
@@ -28,34 +32,50 @@ class _State extends State<GameWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: Container(
-          padding: const EdgeInsets.all(2.0),
-          constraints: const BoxConstraints(maxWidth: 800, maxHeight: 800),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              HeaderWidget(
-                goal: _goal,
-                histories: _histories,
-                currentMode: _mode,
-                switchMode: _switchMode,
-              ),
-              Expanded(
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: BoardWidget(
-                    board: isEditMode ? _customBoard : _board,
-                    onTapGrid: isEditMode ? _onTapGrid : null,
+    return BlocBuilder<GameBloc, GameState>(
+      builder: (context, state) {
+        final bloc = context.read<GameBloc>();
+        return Center(
+          child: Card(
+            child: Container(
+              padding: const EdgeInsets.all(2.0),
+              constraints: const BoxConstraints(maxWidth: 800, maxHeight: 800),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  HeaderWidget(
+                    goal: state.goal,
+                    histories: state.histories,
+                    currentMode: state.mode,
+                    switchMode: () => bloc.add(SwitchModeEvent()),
                   ),
-                ),
+                  Expanded(
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: BoardWidget(
+                        board:
+                            state.isEditMode ? state.customBoard : state.board,
+                        onTapGrid: state.isEditMode
+                            ? ({
+                                required int x,
+                                required int y,
+                              }) =>
+                                bloc.add(SelectGridEvent(
+                                    position: Position(x: x, y: y)))
+                            : null,
+                      ),
+                    ),
+                  ),
+                  _buildFooter(
+                    context: context,
+                    currentMode: state.mode,
+                  ),
+                ],
               ),
-              _buildFooter(currentMode: _mode),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
