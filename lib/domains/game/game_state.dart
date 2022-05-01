@@ -60,23 +60,6 @@ class GameState with _$GameState {
     }
   }
 
-  GameState onTapGrid({required Position position}) {
-    final maybeExistingRobot = customBoard.getRobotIfExists(position);
-    if (maybeExistingRobot != null) {
-      /// Select robot on tapped grid.
-      return copyWith(selectedRobotForEdit: maybeExistingRobot);
-    }
-
-    final selectedRobot = selectedRobotForEdit;
-    if (selectedRobot == null || customBoard.hasGoalOnGrid(position)) {
-      return this;
-    }
-    return copyWith(
-      customBoard: customBoard.movedTo(selectedRobot, position),
-      selectedRobotForEdit: null,
-    );
-  }
-
   GameState onColorSelected({required RobotColors color}) =>
       copyWith(focusedRobot: Robot(color: color));
 

@@ -55,7 +55,6 @@ class GameWidget extends StatelessWidget {
                         goal: state.goal,
                         histories: state.histories,
                         currentMode: state.mode,
-                        switchMode: () => bloc.add(const SwitchModeEvent()),
                       ),
                       Expanded(
                         child: AspectRatio(
@@ -64,14 +63,6 @@ class GameWidget extends StatelessWidget {
                             board: state.isEditMode
                                 ? state.customBoard
                                 : state.board,
-                            onTapGrid: state.isEditMode
-                                ? ({
-                                    required int x,
-                                    required int y,
-                                  }) =>
-                                    bloc.add(SelectGridEvent(
-                                        position: Position(x: x, y: y)))
-                                : null,
                           ),
                         ),
                       ),

@@ -8,14 +8,12 @@ class HeaderWidget extends StatelessWidget {
   final Goal goal;
   final List<History> histories;
   final GameWidgetMode currentMode;
-  final void Function() switchMode;
 
   const HeaderWidget({
     Key? key,
     required this.goal,
     required this.histories,
     required this.currentMode,
-    required this.switchMode,
   }) : super(key: key);
 
   final _textStyle = const TextStyle(
@@ -64,11 +62,6 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 
-  Icon _switchModeIcon({required GameWidgetMode currentMode}) =>
-      currentMode == GameWidgetMode.editBoard
-          ? const Icon(Icons.play_circle_fill, color: Colors.green)
-          : const Icon(Icons.edit, color: Colors.grey);
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -84,19 +77,7 @@ class HeaderWidget extends StatelessWidget {
               _goal(goal),
             ],
           ),
-          Row(
-            children: [
-              Text(
-                "${histories.length.toString()} moves",
-                style: _textStyle,
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: switchMode,
-                icon: _switchModeIcon(currentMode: currentMode),
-              ),
-            ],
-          ),
+          Text("${histories.length.toString()} moves", style: _textStyle),
         ],
       ),
     );

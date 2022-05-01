@@ -13,12 +13,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       (event, emit) =>
           emit(state.onDirectionSelected(direction: event.direction)),
     );
-    on<SelectGridEvent>(
-      (event, emit) => emit(state.onTapGrid(position: event.position)),
-    );
     on<RedoEvent>((event, emit) => emit(state.onRedoPressed()));
     on<RestartEvent>((event, emit) => emit(state.onRestart()));
-    on<SwitchModeEvent>((event, emit) => emit(state.switchMode()));
   }
 }
 
@@ -38,20 +34,10 @@ class SelectDirectionEvent extends GameEvent {
   const SelectDirectionEvent({required this.direction});
 }
 
-class SelectGridEvent extends GameEvent {
-  final Position position;
-
-  const SelectGridEvent({required this.position});
-}
-
 class RedoEvent extends GameEvent {
   const RedoEvent();
 }
 
 class RestartEvent extends GameEvent {
   const RestartEvent();
-}
-
-class SwitchModeEvent extends GameEvent {
-  const SwitchModeEvent();
 }
