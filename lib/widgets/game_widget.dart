@@ -19,6 +19,7 @@ class GameWidget extends StatelessWidget {
     final bloc = context.read<GameBloc>();
     switch (currentMode) {
       case GameWidgetMode.play:
+      case GameWidgetMode.showResult:
         return ControlButtons(
           onColorSelected: ({required RobotColors color}) =>
               bloc.add(SelectColorEvent(color: color)),
@@ -26,7 +27,6 @@ class GameWidget extends StatelessWidget {
               bloc.add(SelectDirectionEvent(direction: direction)),
           onRedoPressed: () => bloc.add(const RedoEvent()),
         );
-      case GameWidgetMode.showResult:
       case GameWidgetMode.editBoard:
         return const SizedBox.shrink();
     }
@@ -84,8 +84,11 @@ class GameWidget extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: true, // FIXME
-                child: ResultDialog(moves: state.histories.length),
+                visible: state.shouldShowResult,
+                child: ResultDialog(
+                  moves: state.histories.length,
+                  onPressButton: () => bloc.add(const RestartEvent()),
+                ),
               ),
             ],
           ),

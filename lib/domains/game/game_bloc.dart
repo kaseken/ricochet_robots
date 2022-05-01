@@ -17,6 +17,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       (event, emit) => emit(state.onTapGrid(position: event.position)),
     );
     on<RedoEvent>((event, emit) => emit(state.onRedoPressed()));
+    on<RestartEvent>((event, emit) => emit(state.onRestart()));
     on<SwitchModeEvent>((event, emit) => emit(state.switchMode()));
   }
 }
@@ -45,6 +46,10 @@ class SelectGridEvent extends GameEvent {
 
 class RedoEvent extends GameEvent {
   const RedoEvent();
+}
+
+class RestartEvent extends GameEvent {
+  const RestartEvent();
 }
 
 class SwitchModeEvent extends GameEvent {

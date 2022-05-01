@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class ResultDialog extends StatelessWidget {
   final int moves;
+  final void Function() onPressButton;
 
   const ResultDialog({
     Key? key,
     required this.moves,
+    required this.onPressButton,
   }) : super(key: key);
 
   @override
@@ -13,12 +15,7 @@ class ResultDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('Congratulations!'),
       content: Text('Finished in $moves moves.'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
-        )
-      ],
+      actions: [TextButton(onPressed: onPressButton, child: const Text('OK'))],
     );
   }
 }

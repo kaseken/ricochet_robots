@@ -29,6 +29,7 @@ class GameState with _$GameState {
   }) = _GameState;
 
   bool get isEditMode => mode == GameWidgetMode.editBoard;
+
   bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
   static GameState get init => _reset();
@@ -37,7 +38,7 @@ class GameState with _$GameState {
   static GameState _reset({Board? newBoard, GameWidgetMode? mode}) {
     final board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
     return GameState(
-      mode: GameWidgetMode.play,
+      mode: mode ?? GameWidgetMode.play,
       board: board,
       goal: GoalBuilder.build(),
       histories: List.empty(growable: true),
@@ -115,4 +116,6 @@ class GameState with _$GameState {
       ),
     );
   }
+
+  GameState onRestart() => _reset(mode: GameWidgetMode.play);
 }

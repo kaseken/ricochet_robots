@@ -91,9 +91,12 @@ class HeaderWidget extends StatelessWidget {
                 style: _textStyle,
               ),
               const SizedBox(width: 8),
-              IconButton(
-                onPressed: switchMode,
-                icon: _switchModeIcon(currentMode: currentMode),
+              Visibility(
+                visible: currentMode != GameWidgetMode.showResult,
+                child: IconButton(
+                  onPressed: switchMode,
+                  icon: _switchModeIcon(currentMode: currentMode),
+                ),
               ),
             ],
           ),
