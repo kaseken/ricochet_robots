@@ -12,10 +12,17 @@ class ResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Congratulations!'),
-      content: Text('Finished in $moves moves.'),
-      actions: [TextButton(onPressed: onPressButton, child: const Text('OK'))],
+    return Expanded(
+      child: Container(
+        color: Colors.black12,
+        child: AlertDialog(
+          title: const Text('Congratulations!'),
+          content: Text('Finished in $moves moves.'),
+          actions: [
+            TextButton(onPressed: onPressButton, child: const Text('OK'))
+          ],
+        ),
+      ),
     );
   }
 }

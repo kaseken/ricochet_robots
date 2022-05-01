@@ -98,7 +98,11 @@ class GameState with _$GameState {
         ? [...histories, history]
         : histories;
     if (board.isGoal(nextPosition, goal, focusedRobot)) {
-      return _reset(mode: GameWidgetMode.showResult);
+      return copyWith(
+        mode: GameWidgetMode.showResult,
+        board: nextBoard,
+        histories: nextHistories,
+      );
     }
     return copyWith(board: nextBoard, histories: nextHistories);
   }

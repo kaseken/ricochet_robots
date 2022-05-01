@@ -65,9 +65,9 @@ class HeaderWidget extends StatelessWidget {
   }
 
   Icon _switchModeIcon({required GameWidgetMode currentMode}) =>
-      currentMode == GameWidgetMode.play
-          ? const Icon(Icons.edit, color: Colors.grey)
-          : const Icon(Icons.play_circle_fill, color: Colors.green);
+      currentMode == GameWidgetMode.editBoard
+          ? const Icon(Icons.play_circle_fill, color: Colors.green)
+          : const Icon(Icons.edit, color: Colors.grey);
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +91,9 @@ class HeaderWidget extends StatelessWidget {
                 style: _textStyle,
               ),
               const SizedBox(width: 8),
-              Visibility(
-                visible: currentMode != GameWidgetMode.showResult,
-                child: IconButton(
-                  onPressed: switchMode,
-                  icon: _switchModeIcon(currentMode: currentMode),
-                ),
+              IconButton(
+                onPressed: switchMode,
+                icon: _switchModeIcon(currentMode: currentMode),
               ),
             ],
           ),
