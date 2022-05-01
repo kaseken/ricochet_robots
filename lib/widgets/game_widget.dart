@@ -7,6 +7,7 @@ import 'package:ricochet_robots/models/robot.dart';
 import 'package:ricochet_robots/widgets/board_widget.dart';
 import 'package:ricochet_robots/widgets/control_buttons.dart';
 import 'package:ricochet_robots/widgets/header_widget.dart';
+import 'package:ricochet_robots/widgets/result_dialog.dart';
 
 class GameWidget extends StatelessWidget {
   const GameWidget({Key? key}) : super(key: key);
@@ -25,6 +26,7 @@ class GameWidget extends StatelessWidget {
               bloc.add(SelectDirectionEvent(direction: direction)),
           onRedoPressed: () => bloc.add(const RedoEvent()),
         );
+      case GameWidgetMode.showResult:
       case GameWidgetMode.editBoard:
         return const SizedBox.shrink();
     }
@@ -36,43 +38,56 @@ class GameWidget extends StatelessWidget {
       builder: (context, state) {
         final bloc = context.read<GameBloc>();
         return Center(
-          child: Card(
-            child: Container(
-              padding: const EdgeInsets.all(2.0),
-              constraints: const BoxConstraints(maxWidth: 800, maxHeight: 800),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  HeaderWidget(
-                    goal: state.goal,
-                    histories: state.histories,
-                    currentMode: state.mode,
-                    switchMode: () => bloc.add(const SwitchModeEvent()),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Card(
+                child: Container(
+                  padding: const EdgeInsets.all(2.0),
+                  constraints: const BoxConstraints(
+                    maxWidth: 800,
+                    maxHeight: 800,
                   ),
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: BoardWidget(
-                        board:
-                            state.isEditMode ? state.customBoard : state.board,
-                        onTapGrid: state.isEditMode
-                            ? ({
-                                required int x,
-                                required int y,
-                              }) =>
-                                bloc.add(SelectGridEvent(
-                                    position: Position(x: x, y: y)))
-                            : null,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      HeaderWidget(
+                        goal: state.goal,
+                        histories: state.histories,
+                        currentMode: state.mode,
+                        switchMode: () => bloc.add(const SwitchModeEvent()),
                       ),
-                    ),
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: BoardWidget(
+                            board: state.isEditMode
+                                ? state.customBoard
+                                : state.board,
+                            onTapGrid: state.isEditMode
+                                ? ({
+                                    required int x,
+                                    required int y,
+                                  }) =>
+                                    bloc.add(SelectGridEvent(
+                                        position: Position(x: x, y: y)))
+                                : null,
+                          ),
+                        ),
+                      ),
+                      _buildFooter(
+                        context: context,
+                        currentMode: state.mode,
+                      ),
+                    ],
                   ),
-                  _buildFooter(
-                    context: context,
-                    currentMode: state.mode,
-                  ),
-                ],
+                ),
               ),
-            ),
+              Visibility(
+                visible: true, // FIXME
+                child: ResultDialog(moves: state.histories.length),
+              ),
+            ],
           ),
         );
       },

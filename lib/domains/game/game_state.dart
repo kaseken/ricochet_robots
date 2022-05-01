@@ -8,7 +8,7 @@ import 'package:ricochet_robots/models/robot.dart';
 
 part 'game_state.freezed.dart';
 
-enum GameWidgetMode { play, editBoard }
+enum GameWidgetMode { play, showResult, editBoard }
 
 @freezed
 class GameState with _$GameState {
@@ -29,11 +29,12 @@ class GameState with _$GameState {
   }) = _GameState;
 
   bool get isEditMode => mode == GameWidgetMode.editBoard;
+  bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
   static GameState get init => _reset();
 
   /// Reset state and returns new state.
-  static GameState _reset({Board? newBoard}) {
+  static GameState _reset({Board? newBoard, GameWidgetMode? mode}) {
     final board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
     return GameState(
       mode: GameWidgetMode.play,
@@ -51,8 +52,10 @@ class GameState with _$GameState {
     switch (mode) {
       case GameWidgetMode.play:
         return copyWith(customBoard: board, mode: GameWidgetMode.editBoard);
+      case GameWidgetMode.showResult:
+        return this;
       case GameWidgetMode.editBoard:
-        return _reset(newBoard: customBoard);
+        return _reset(newBoard: customBoard, mode: GameWidgetMode.play);
     }
   }
 
@@ -94,7 +97,7 @@ class GameState with _$GameState {
         ? [...histories, history]
         : histories;
     if (board.isGoal(nextPosition, goal, focusedRobot)) {
-      return _reset();
+      return _reset(mode: GameWidgetMode.showResult);
     }
     return copyWith(board: nextBoard, histories: nextHistories);
   }
