@@ -25,7 +25,7 @@ class BoardId {
       baseId: toBaseId(board: board),
       normalGoalId: toNormalGoalId(board: board),
       wildGoalId: toWildGoalId(board: board),
-      robotId: '',
+      robotId: toRobotId(board: board),
     );
   }
 
@@ -100,4 +100,14 @@ String toWildGoalId({required Board board}) {
     });
   }).expand((list) => list).whereType<Position>().first;
   return positionToId(position: position);
+}
+
+String toRobotId({required Board board}) {
+  return RobotColors.values.map((color) {
+    final position = board.robotPositions[color];
+    if (position == null) {
+      throw Exception('Robot not found, color: $color');
+    }
+    return positionToId(position: position);
+  }).join();
 }
