@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/widgets/game_widget.dart';
-
-import 'domains/game/game_bloc.dart';
 
 void main() {
   runApp(const App());
@@ -10,18 +9,18 @@ void main() {
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ricochet robots trainer',
       theme: ThemeData(primarySwatch: Colors.grey),
       onGenerateRoute: (settings) {
-        final queryParameters = Uri.parse(settings.name ?? '/').queryParameters;
+        /// Read id from query parameters.
+        final id = Uri.parse(settings.name ?? '/').queryParameters['id'];
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (BuildContext context) => GameBloc(
-              boardId: queryParameters['id'],
-            ),
+            create: (BuildContext context) => GameBloc(boardId: id),
             child: const Home(title: 'Ricochet Robots Trainer'),
           ),
         );
