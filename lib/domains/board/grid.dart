@@ -3,16 +3,30 @@ import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 
 abstract class Grid {
-  final Map<Directions, bool> _canMove = {};
+  final bool canMoveUp;
+  final bool canMoveRight;
+  final bool canMoveDown;
+  final bool canMoveLeft;
+
+  const Grid({
+    this.canMoveUp = false,
+    this.canMoveRight = false,
+    this.canMoveDown = false,
+    this.canMoveLeft = false,
+  });
 
   bool canMove(Directions directions) {
-    return _canMove[directions] ?? false;
+    switch (directions) {
+      case Directions.up:
+        return canMoveUp;
+      case Directions.right:
+        return canMoveRight;
+      case Directions.down:
+        return canMoveDown;
+      case Directions.left:
+        return canMoveLeft;
+    }
   }
-
-  bool get canMoveUp => _canMove[Directions.up] ?? false;
-  bool get canMoveRight => _canMove[Directions.right] ?? false;
-  bool get canMoveDown => _canMove[Directions.down] ?? false;
-  bool get canMoveLeft => _canMove[Directions.left] ?? false;
 
   bool isGoal(Goal goal, Robot robot) => false;
 }
@@ -23,15 +37,27 @@ class NormalGrid extends Grid {
     bool canMoveDown = true,
     bool canMoveLeft = true,
     bool canMoveRight = true,
-  }) {
-    _canMove[Directions.up] = canMoveUp;
-    _canMove[Directions.down] = canMoveDown;
-    _canMove[Directions.left] = canMoveLeft;
-    _canMove[Directions.right] = canMoveRight;
-  }
+  }) : super(
+          canMoveUp: canMoveUp,
+          canMoveRight: canMoveRight,
+          canMoveDown: canMoveDown,
+          canMoveLeft: canMoveLeft,
+        );
 }
 
-abstract class GoalGrid extends Grid {}
+abstract class GoalGrid extends Grid {
+  const GoalGrid({
+    required bool canMoveUp,
+    required bool canMoveDown,
+    required bool canMoveLeft,
+    required bool canMoveRight,
+  }) : super(
+          canMoveUp: canMoveUp,
+          canMoveRight: canMoveRight,
+          canMoveDown: canMoveDown,
+          canMoveLeft: canMoveLeft,
+        );
+}
 
 class NormalGoalGrid extends GoalGrid {
   final RobotColors color;
@@ -44,12 +70,12 @@ class NormalGoalGrid extends GoalGrid {
     bool canMoveDown = true,
     bool canMoveLeft = true,
     bool canMoveRight = true,
-  }) {
-    _canMove[Directions.up] = canMoveUp;
-    _canMove[Directions.down] = canMoveDown;
-    _canMove[Directions.left] = canMoveLeft;
-    _canMove[Directions.right] = canMoveRight;
-  }
+  }) : super(
+          canMoveUp: canMoveUp,
+          canMoveRight: canMoveRight,
+          canMoveDown: canMoveDown,
+          canMoveLeft: canMoveLeft,
+        );
 
   @override
   bool isGoal(Goal goal, Robot robot) {
@@ -63,12 +89,12 @@ class WildGoalGrid extends GoalGrid {
     bool canMoveDown = true,
     bool canMoveLeft = true,
     bool canMoveRight = true,
-  }) {
-    _canMove[Directions.up] = canMoveUp;
-    _canMove[Directions.down] = canMoveDown;
-    _canMove[Directions.left] = canMoveLeft;
-    _canMove[Directions.right] = canMoveRight;
-  }
+  }) : super(
+          canMoveUp: canMoveUp,
+          canMoveRight: canMoveRight,
+          canMoveDown: canMoveDown,
+          canMoveLeft: canMoveLeft,
+        );
 
   @override
   bool isGoal(Goal goal, Robot robot) =>

@@ -401,6 +401,13 @@ String gridsToId({required List<List<Grid>> grids}) {
   return '';
 }
 
+@visibleForTesting
+List<List<Grid>> toGrids({required String id}) {
+  // final baseId = id.substring(0, rowLength * rowLength);
+  // final baseGrids = toNormalGrids(id: baseId);
+  throw UnimplementedError();
+}
+
 final _chars = [
   /// '0' to '9'
   ...(List.generate(10, (i) => i.toString())),
@@ -464,4 +471,14 @@ NormalGrid charToNormalGrid({required String char}) {
     canMoveDown: value & _canMoveDownBit > 0,
     canMoveLeft: value & _canMoveLeftBit > 0,
   );
+}
+
+@visibleForTesting
+List<List<NormalGrid>> addEdges({required List<List<NormalGrid>> baseGrids}) {
+  throw UnimplementedError();
+}
+
+@visibleForTesting
+List<List<Grid>> putGoals({required List<List<NormalGrid>> baseGrids}) {
+  throw UnimplementedError();
 }
