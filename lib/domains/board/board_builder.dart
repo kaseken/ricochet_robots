@@ -497,7 +497,17 @@ NormalGrid charToNormalGrid({required String char}) {
 
 @visibleForTesting
 List<List<NormalGrid>> addEdges({required List<List<NormalGrid>> baseGrids}) {
-  throw UnimplementedError();
+  return List.generate(rowLength, (y) {
+    return List.generate(rowLength, (x) {
+      final grid = baseGrids[y][x];
+      return NormalGrid(
+        canMoveUp: grid.canMoveUp && y - 1 >= 0,
+        canMoveRight: grid.canMoveRight && x + 1 < 16,
+        canMoveDown: grid.canMoveDown && y + 1 < 16,
+        canMoveLeft: grid.canMoveLeft && x - 1 >= 0,
+      );
+    });
+  });
 }
 
 @visibleForTesting
