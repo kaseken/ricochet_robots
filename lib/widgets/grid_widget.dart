@@ -22,8 +22,8 @@ class _State extends State<GridWidget> {
   bool get hasRobot => widget.robot != null;
   bool get isGoal =>
       widget.grid is NormalGoalGrid || widget.grid is WildGoalGrid;
-  bool get hasItem => hasRobot || isGoal || widget.grid is CenterGrid;
-  bool get isTappable => widget.grid is! CenterGrid;
+  bool get hasItem => hasRobot || isGoal || widget.grid.isInactiveGrid;
+  bool get isTappable => widget.grid.isInactiveGrid;
 
   Border _buildBorder(Grid grid) {
     const wall = BorderSide(width: 1.0, color: Colors.grey);
@@ -83,7 +83,7 @@ class _State extends State<GridWidget> {
   }
 
   Color _gridColor(Grid grid) {
-    if (grid is CenterGrid) {
+    if (grid.isInactiveGrid) {
       return Colors.grey;
     }
     return Colors.transparent;

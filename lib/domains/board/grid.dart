@@ -29,6 +29,22 @@ abstract class Grid {
   }
 
   bool isGoal(Goal goal, Robot robot) => false;
+
+  bool get canPlaceRobot {
+    if (this is! NormalGrid) {
+      return false;
+    }
+    return canMoveUp || canMoveRight || canMoveDown || canMoveLeft;
+  }
+
+  /// Use for center grid.
+  bool get isInactiveGrid {
+    return (this is NormalGrid) &&
+        !canMoveUp &&
+        !canMoveRight &&
+        !canMoveDown &&
+        !canMoveLeft;
+  }
 }
 
 class NormalGrid extends Grid {
@@ -100,5 +116,3 @@ class WildGoalGrid extends GoalGrid {
   bool isGoal(Goal goal, Robot robot) =>
       goal.color == null && goal.type == null;
 }
-
-class CenterGrid extends Grid {}

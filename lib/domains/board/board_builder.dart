@@ -16,7 +16,7 @@ class BoardBuilder {
       if (positions.where((p) => p.x == x && p.y == y).isNotEmpty) {
         continue;
       }
-      if (grids[y][x] is NormalGrid) {
+      if (grids[y][x].canPlaceRobot) {
         positions.add(Position(x: x, y: y));
       }
     }
@@ -199,8 +199,18 @@ class BoardBuilder {
         NormalGrid(),
         NormalGrid(canMoveDown: false),
         NormalGrid(canMoveRight: false),
-        CenterGrid(),
-        CenterGrid(),
+        NormalGrid(
+          canMoveUp: false,
+          canMoveRight: false,
+          canMoveDown: false,
+          canMoveLeft: false,
+        ),
+        NormalGrid(
+          canMoveUp: false,
+          canMoveRight: false,
+          canMoveDown: false,
+          canMoveLeft: false,
+        ),
         NormalGrid(canMoveLeft: false),
         NormalGrid(),
         NormalGrid(),
@@ -217,8 +227,18 @@ class BoardBuilder {
         NormalGrid(),
         WildGoalGrid(canMoveUp: false, canMoveRight: false),
         NormalGrid(canMoveRight: false, canMoveLeft: false),
-        CenterGrid(),
-        CenterGrid(),
+        NormalGrid(
+          canMoveUp: false,
+          canMoveRight: false,
+          canMoveDown: false,
+          canMoveLeft: false,
+        ),
+        NormalGrid(
+          canMoveUp: false,
+          canMoveRight: false,
+          canMoveDown: false,
+          canMoveLeft: false,
+        ),
         NormalGrid(canMoveLeft: false),
         NormalGrid(),
         NormalGrid(),
