@@ -438,7 +438,7 @@ Board toBoard({required String id}) => Board(
 
 @visibleForTesting
 List<List<Grid>> toGrids({required String id}) {
-  assert(id.length == _baseIdLength);
+  assert(id.length == _idLength);
   final baseId = id.substring(_baseIdStart, _baseIdStart + _baseIdLength);
   final baseGrids = addEdges(grids: toNormalGrids(id: baseId));
   final normalGoalId = id.substring(
@@ -479,7 +479,7 @@ const rowLength = 16;
 
 @visibleForTesting
 List<List<NormalGrid>> toNormalGrids({required String id}) {
-  assert(id.length == _normalGoalIdLength);
+  assert(id.length == _baseIdLength);
   return intoChunks(id: id, chunkSize: rowLength)
       .map((id) => toNormalGridRow(id: id))
       .toList();
