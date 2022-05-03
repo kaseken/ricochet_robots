@@ -10,20 +10,26 @@ import 'package:tuple/tuple.dart';
 class BoardId {
   final String baseId;
   final String normalGoalId;
+  final String wildGoalId;
+  final String robotId;
 
   const BoardId({
     required this.baseId,
     required this.normalGoalId,
+    required this.wildGoalId,
+    required this.robotId,
   });
 
   static BoardId from({required Board board}) {
     return BoardId(
       baseId: toBaseId(board: board),
       normalGoalId: toNormalGoalId(board: board),
+      wildGoalId: toWildGoalId(board: board),
+      robotId: '',
     );
   }
 
-  String get value => baseId + normalGoalId;
+  String get value => baseId + normalGoalId + wildGoalId + robotId;
 }
 
 @visibleForTesting
@@ -82,3 +88,16 @@ String toNormalGoalPositionId({
 
 String positionToId({required Position position}) =>
     position.x.toRadixString(16) + position.y.toRadixString(16);
+
+String toWildGoalId({required Board board}) {
+  final position = List.generate(rowLength, (y) {
+    return List.generate(rowLength, (x) {
+      final grid = board.grids[y][x];
+      if (grid is WildGoalGrid) {
+        return Position(x: x, y: y);
+      }
+      return null;
+    });
+  }).expand((list) => list).whereType<Position>().first;
+  return positionToId(position: position);
+}
