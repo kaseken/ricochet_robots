@@ -9,6 +9,11 @@ abstract class Grid {
     return _canMove[directions] ?? false;
   }
 
+  bool get canMoveUp => _canMove[Directions.up] ?? false;
+  bool get canMoveRight => _canMove[Directions.right] ?? false;
+  bool get canMoveDown => _canMove[Directions.down] ?? false;
+  bool get canMoveLeft => _canMove[Directions.left] ?? false;
+
   bool isGoal(Goal goal, Robot robot) => false;
 }
 

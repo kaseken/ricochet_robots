@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
@@ -394,4 +395,42 @@ class BoardBuilder {
       ],
     ];
   }
+}
+
+String gridsToId({required List<List<Grid>> grids}) {
+  return '';
+}
+
+final _chars = [
+  /// '0' to '9'
+  ...(List.generate(10, (i) => i.toString())),
+
+  /// 'a' to 'z'
+  ...(List.generate(26, (i) => String.fromCharCode('a'.codeUnitAt(0) + i))),
+
+  /// 'A' to 'Z'
+  ...(List.generate(26, (i) => String.fromCharCode('A'.codeUnitAt(0) + i))),
+
+  '_',
+  '-',
+];
+
+const _canMoveUpBit = 1 << 0;
+const _canMoveRightBit = 1 << 1;
+const _canMoveDownBit = 1 << 2;
+const _canMoveLeftBit = 1 << 3;
+
+@visibleForTesting
+NormalGrid charToNormalGrid({required String char}) {
+  final value = _chars.indexOf(char);
+  if (value < 0 || 16 <= value) {
+    /// Unexpected.
+    return NormalGrid();
+  }
+  return NormalGrid(
+    canMoveUp: value & _canMoveUpBit > 0,
+    canMoveRight: value & _canMoveRightBit > 0,
+    canMoveDown: value & _canMoveDownBit > 0,
+    canMoveLeft: value & _canMoveLeftBit > 0,
+  );
 }
