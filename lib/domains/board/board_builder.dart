@@ -423,11 +423,31 @@ String gridsToId({required List<List<Grid>> grids}) {
   return '';
 }
 
+const _baseIdStart = 0;
+const _baseIdLength = rowLength * rowLength;
+const _normalGoalIdStart = _baseIdStart + _baseIdLength;
+final _normalGoalIdLength =
+    GoalTypes.values.length * RobotColors.values.length * 2;
+final _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
+const _wildGoalIdLength = 2;
+
 @visibleForTesting
 List<List<Grid>> toGrids({required String id}) {
-  // final baseId = id.substring(0, rowLength * rowLength);
-  // final baseGrids = toNormalGrids(id: baseId);
-  throw UnimplementedError();
+  final baseId = id.substring(_baseIdStart, _baseIdStart + _baseIdLength);
+  final baseGrids = addEdges(grids: toNormalGrids(id: baseId));
+  final normalGoalId = id.substring(
+    _normalGoalIdStart,
+    _normalGoalIdStart + _normalGoalIdLength,
+  );
+  final gridsWithNormalGoal = putNormalGoals(
+    baseGrids: baseGrids,
+    goalId: normalGoalId,
+  );
+  final wildGoalId = id.substring(
+    _wildGoalIdStart,
+    _wildGoalIdStart + _wildGoalIdLength,
+  );
+  return putWildGoalGrid(grids: gridsWithNormalGoal, id: wildGoalId);
 }
 
 final _chars = [
@@ -453,7 +473,7 @@ const rowLength = 16;
 
 @visibleForTesting
 List<List<NormalGrid>> toNormalGrids({required String id}) {
-  assert(id.length == rowLength * rowLength);
+  assert(id.length == _normalGoalIdLength);
   return intoChunks(id: id, chunkSize: rowLength)
       .map((id) => toNormalGridRow(id: id))
       .toList();
@@ -496,10 +516,10 @@ NormalGrid charToNormalGrid({required String char}) {
 }
 
 @visibleForTesting
-List<List<NormalGrid>> addEdges({required List<List<NormalGrid>> baseGrids}) {
+List<List<NormalGrid>> addEdges({required List<List<NormalGrid>> grids}) {
   return List.generate(rowLength, (y) {
     return List.generate(rowLength, (x) {
-      final grid = baseGrids[y][x];
+      final grid = grids[y][x];
       return NormalGrid(
         canMoveUp: grid.canMoveUp && y - 1 >= 0,
         canMoveRight: grid.canMoveRight && x + 1 < 16,
@@ -530,8 +550,7 @@ List<List<Grid>> putNormalGoals({
 List<Tuple3<GoalTypes, RobotColors, Position>> getNormalGoalPositions({
   required String goalId,
 }) {
-  assert(
-      goalId.length == GoalTypes.values.length * RobotColors.values.length * 2);
+  assert(goalId.length == _normalGoalIdLength);
   return List.generate(GoalTypes.values.length, (i) {
     return List.generate(RobotColors.values.length, (j) {
       final start = (i * RobotColors.values.length + j) * 2;
@@ -568,6 +587,27 @@ List<List<Grid>> putNormalGoalGrid({
       return NormalGoalGrid(
         type: goalType,
         color: color,
+        canMoveUp: grids[y][x].canMoveUp,
+        canMoveRight: grids[y][x].canMoveRight,
+        canMoveDown: grids[y][x].canMoveDown,
+        canMoveLeft: grids[y][x].canMoveLeft,
+      );
+    });
+  });
+}
+
+List<List<Grid>> putWildGoalGrid({
+  required List<List<Grid>> grids,
+  required String id,
+}) {
+  assert(id.length == _wildGoalIdLength);
+  final position = getGoalPosition(id: id);
+  return List.generate(rowLength, (y) {
+    return List.generate(rowLength, (x) {
+      if (position.x != x || position.y != y) {
+        return grids[y][x];
+      }
+      return WildGoalGrid(
         canMoveUp: grids[y][x].canMoveUp,
         canMoveRight: grids[y][x].canMoveRight,
         canMoveDown: grids[y][x].canMoveDown,
