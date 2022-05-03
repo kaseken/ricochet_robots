@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:tuple/tuple.dart';
 
 class BoardBuilder {
   static List<Position> buildInitialPositions(List<List<Grid>> grids) {
@@ -481,7 +483,7 @@ List<NormalGrid> toNormalGridRow({required String id}) {
 @visibleForTesting
 NormalGrid charToNormalGrid({required String char}) {
   final value = _chars.indexOf(char);
-  if (value < 0 || 16 <= value) {
+  if (value < 0 || rowLength <= value) {
     /// Unexpected.
     return NormalGrid();
   }
@@ -499,6 +501,68 @@ List<List<NormalGrid>> addEdges({required List<List<NormalGrid>> baseGrids}) {
 }
 
 @visibleForTesting
-List<List<Grid>> putGoals({required List<List<NormalGrid>> baseGrids}) {
-  throw UnimplementedError();
+List<List<Grid>> putNormalGoals({
+  required List<List<NormalGrid>> baseGrids,
+  required String goalId,
+}) {
+  return getNormalGoalPositions(goalId: goalId)
+      .fold<List<List<Grid>>>(baseGrids, (grids, tuple) {
+    return putNormalGoalGrid(
+      grids: grids,
+      goalType: tuple.item1,
+      color: tuple.item2,
+      position: tuple.item3,
+    );
+  });
+}
+
+@visibleForTesting
+List<Tuple3<GoalTypes, RobotColors, Position>> getNormalGoalPositions({
+  required String goalId,
+}) {
+  assert(
+      goalId.length == GoalTypes.values.length * RobotColors.values.length * 2);
+  return List.generate(GoalTypes.values.length, (i) {
+    return List.generate(RobotColors.values.length, (j) {
+      final start = (i * RobotColors.values.length + j) * 2;
+      return Tuple3(
+        GoalTypes.values[i],
+        RobotColors.values[j],
+        getGoalPosition(id: goalId.substring(start, start + 2)),
+      );
+    });
+  }).expand((list) => list).toList();
+}
+
+@visibleForTesting
+Position getGoalPosition({required String id}) {
+  assert(id.length == 2);
+  final x = _chars.indexOf(id[0]);
+  final y = _chars.indexOf(id[1]);
+  assert(0 <= x && x < rowLength);
+  assert(0 <= y && y < rowLength);
+  return Position(x: x, y: y);
+}
+
+List<List<Grid>> putNormalGoalGrid({
+  required List<List<Grid>> grids,
+  required RobotColors color,
+  required GoalTypes goalType,
+  required Position position,
+}) {
+  return List.generate(rowLength, (y) {
+    return List.generate(rowLength, (x) {
+      if (position.x != x || position.y != y) {
+        return grids[y][x];
+      }
+      return NormalGoalGrid(
+        type: goalType,
+        color: color,
+        canMoveUp: grids[y][x].canMoveUp,
+        canMoveRight: grids[y][x].canMoveRight,
+        canMoveDown: grids[y][x].canMoveDown,
+        canMoveLeft: grids[y][x].canMoveLeft,
+      );
+    });
+  });
 }
