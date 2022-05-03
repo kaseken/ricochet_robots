@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ricochet_robots/models/board.dart';
-import 'package:ricochet_robots/models/board_builder.dart';
-import 'package:ricochet_robots/models/goal.dart';
-import 'package:ricochet_robots/models/history.dart';
-import 'package:ricochet_robots/models/position.dart';
-import 'package:ricochet_robots/models/robot.dart';
+import 'package:ricochet_robots/domains/board/board.dart';
+import 'package:ricochet_robots/domains/board/board_builder.dart';
+import 'package:ricochet_robots/domains/board/goal.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/game/history.dart';
 
 part 'game_state.freezed.dart';
 
@@ -26,11 +26,14 @@ class GameState with _$GameState {
 
   bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
-  static GameState get init => _reset();
+  static GameState initialize({required String? boardId}) {
+    /// TODO: convert boardId into board.
+    return _reset();
+  }
 
   /// Reset state and returns new state.
   static GameState _reset({Board? newBoard, GameWidgetMode? mode}) {
-    final board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
+    final board = newBoard ?? Board(grids: BoardBuilder.defaultGrids);
     return GameState(
       mode: mode ?? GameWidgetMode.play,
       board: board,

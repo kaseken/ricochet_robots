@@ -9,17 +9,22 @@ void main() {
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ricochet robots trainer',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
-      home: BlocProvider(
-        create: (BuildContext context) => GameBloc(),
-        child: const Home(title: 'Ricochet Robots Trainer'),
-      ),
+      theme: ThemeData(primarySwatch: Colors.grey),
+      onGenerateRoute: (settings) {
+        /// Read id from query parameters.
+        final id = Uri.parse(settings.name ?? '/').queryParameters['id'];
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (BuildContext context) => GameBloc(boardId: id),
+            child: const Home(title: 'Ricochet Robots Trainer'),
+          ),
+        );
+      },
     );
   }
 }

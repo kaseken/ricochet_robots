@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/game_bloc.dart';
-import 'package:ricochet_robots/models/position.dart';
-import 'package:ricochet_robots/models/robot.dart';
 
 class ControlButtons extends StatelessWidget {
   const ControlButtons({Key? key}) : super(key: key);
