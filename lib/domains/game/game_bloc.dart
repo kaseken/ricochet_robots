@@ -5,7 +5,8 @@ import 'package:ricochet_robots/models/robot.dart';
 import '../../models/position.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  GameBloc() : super(GameState.init) {
+  GameBloc({required String? boardId})
+      : super(GameState.initialize(boardId: boardId)) {
     on<SelectColorEvent>(
       (event, emit) => emit(state.onColorSelected(color: event.color)),
     );

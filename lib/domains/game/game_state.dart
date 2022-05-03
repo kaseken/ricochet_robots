@@ -26,7 +26,10 @@ class GameState with _$GameState {
 
   bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
-  static GameState get init => _reset();
+  static GameState initialize({required String? boardId}) {
+    /// TODO: convert boardId into board.
+    return _reset();
+  }
 
   /// Reset state and returns new state.
   static GameState _reset({Board? newBoard, GameWidgetMode? mode}) {
