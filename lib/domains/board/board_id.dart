@@ -1,27 +1,39 @@
 import 'package:flutter/foundation.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_builder.dart';
+import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:tuple/tuple.dart';
 
 class BoardId {
   final String baseId;
+  final String normalGoalId;
 
   const BoardId({
     required this.baseId,
+    required this.normalGoalId,
   });
 
-  String get value => baseId;
+  static BoardId from({required Board board}) {
+    return BoardId(
+      baseId: toBaseId(board: board),
+      normalGoalId: toNormalGoalId(board: board),
+    );
+  }
+
+  String get value => baseId + normalGoalId;
 }
 
 @visibleForTesting
-String baseId({required Board board}) {
+String toBaseId({required Board board}) {
   return List.generate(rowLength, (y) {
     return List.generate(
       rowLength,
       (x) => toGridId(grid: board.grids[y][x]),
-    ).join('');
-  }).join('');
+    ).join();
+  }).join();
 }
 
 @visibleForTesting
@@ -35,3 +47,38 @@ String toGridId({required Grid grid}) {
       .fold<int>(0, (value, pair) => pair.item1 ? (value | pair.item2) : value)
       .toRadixString(16);
 }
+
+String toNormalGoalId({required Board board}) {
+  return List.generate(GoalTypes.values.length, (i) {
+    return List.generate(
+      RobotColors.values.length,
+      (j) => toNormalGoalPositionId(
+        board: board,
+        goalType: GoalTypes.values[i],
+        color: RobotColors.values[j],
+      ),
+    ).join();
+  }).join();
+}
+
+String toNormalGoalPositionId({
+  required Board board,
+  required GoalTypes goalType,
+  required RobotColors color,
+}) {
+  final position = List.generate(rowLength, (y) {
+    return List.generate(rowLength, (x) {
+      final grid = board.grids[y][x];
+      if (grid is NormalGoalGrid &&
+          grid.color == color &&
+          grid.type == goalType) {
+        return Position(x: x, y: y);
+      }
+      return null;
+    });
+  }).expand((list) => list).whereType<Position>().first;
+  return positionToId(position: position);
+}
+
+String positionToId({required Position position}) =>
+    position.x.toRadixString(16) + position.y.toRadixString(16);
