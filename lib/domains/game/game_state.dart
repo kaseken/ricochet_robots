@@ -27,8 +27,15 @@ class GameState with _$GameState {
   bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
   static GameState initialize({required String? boardId}) {
-    /// TODO: convert boardId into board.
-    return _reset();
+    if (boardId == null) {
+      return _reset();
+    }
+    try {
+      final board = toBoard(id: boardId);
+      return _reset(newBoard: board);
+    } on Exception {
+      return _reset();
+    }
   }
 
   /// Reset state and returns new state.

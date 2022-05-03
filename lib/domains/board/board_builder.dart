@@ -420,10 +420,6 @@ class BoardBuilder {
   }
 }
 
-String gridsToId({required List<List<Grid>> grids}) {
-  return '';
-}
-
 const _baseIdStart = 0;
 const _baseIdLength = rowLength * rowLength;
 const _normalGoalIdStart = _baseIdStart + _baseIdLength;
@@ -442,7 +438,7 @@ Board toBoard({required String id}) => Board(
 
 @visibleForTesting
 List<List<Grid>> toGrids({required String id}) {
-  assert(id.length == _baseIdLength);
+  assert(id.length == _idLength);
   final baseId = id.substring(_baseIdStart, _baseIdStart + _baseIdLength);
   final baseGrids = addEdges(grids: toNormalGrids(id: baseId));
   final normalGoalId = id.substring(
@@ -474,16 +470,16 @@ final _chars = [
   '-',
 ];
 
-const _canMoveUpBit = 1 << 0;
-const _canMoveRightBit = 1 << 1;
-const _canMoveDownBit = 1 << 2;
-const _canMoveLeftBit = 1 << 3;
+const canMoveUpBit = 1 << 0;
+const canMoveRightBit = 1 << 1;
+const canMoveDownBit = 1 << 2;
+const canMoveLeftBit = 1 << 3;
 
 const rowLength = 16;
 
 @visibleForTesting
 List<List<NormalGrid>> toNormalGrids({required String id}) {
-  assert(id.length == _normalGoalIdLength);
+  assert(id.length == _baseIdLength);
   return intoChunks(id: id, chunkSize: rowLength)
       .map((id) => toNormalGridRow(id: id))
       .toList();
@@ -518,10 +514,10 @@ NormalGrid charToNormalGrid({required String char}) {
     return NormalGrid();
   }
   return NormalGrid(
-    canMoveUp: value & _canMoveUpBit > 0,
-    canMoveRight: value & _canMoveRightBit > 0,
-    canMoveDown: value & _canMoveDownBit > 0,
-    canMoveLeft: value & _canMoveLeftBit > 0,
+    canMoveUp: value & canMoveUpBit > 0,
+    canMoveRight: value & canMoveRightBit > 0,
+    canMoveDown: value & canMoveDownBit > 0,
+    canMoveLeft: value & canMoveLeftBit > 0,
   );
 }
 
