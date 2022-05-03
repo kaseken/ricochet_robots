@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricochet_robots/models/board_builder.dart';
-import 'package:ricochet_robots/models/position.dart';
+import 'package:ricochet_robots/domains/board/board_builder.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
 
 void main() {
   group('BoardBuilder', () {

@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
-import 'package:ricochet_robots/models/robot.dart';
 
-import '../../models/position.dart';
+import '../board/position.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc({required String? boardId})

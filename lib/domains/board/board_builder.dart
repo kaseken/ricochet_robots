@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:ricochet_robots/models/goal.dart';
-import 'package:ricochet_robots/models/grid.dart';
-import 'package:ricochet_robots/models/position.dart';
-import 'package:ricochet_robots/models/robot.dart';
+import 'package:ricochet_robots/domains/board/goal.dart';
+import 'package:ricochet_robots/domains/board/grid.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
 
 class BoardBuilder {
   static List<Position> buildInitialPositions(List<List<Grid>> grids) {

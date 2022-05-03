@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ricochet_robots/models/board.dart';
-import 'package:ricochet_robots/models/board_builder.dart';
-import 'package:ricochet_robots/models/goal.dart';
-import 'package:ricochet_robots/models/history.dart';
-import 'package:ricochet_robots/models/position.dart';
-import 'package:ricochet_robots/models/robot.dart';
+import 'package:ricochet_robots/domains/board/board.dart';
+import 'package:ricochet_robots/domains/board/board_builder.dart';
+import 'package:ricochet_robots/domains/board/goal.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/game/history.dart';
 
 part 'game_state.freezed.dart';
 

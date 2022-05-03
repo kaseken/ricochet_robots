@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ricochet_robots/domains/board/goal.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
-import 'package:ricochet_robots/models/goal.dart';
-import 'package:ricochet_robots/models/history.dart';
-import 'package:ricochet_robots/models/robot.dart';
+import 'package:ricochet_robots/domains/game/history.dart';
 
 class HeaderWidget extends StatelessWidget {
   final Goal goal;

@@ -1,5 +1,5 @@
-import 'package:ricochet_robots/models/position.dart';
-import 'package:ricochet_robots/models/robot.dart';
+import 'package:ricochet_robots/domains/board/position.dart';
+import 'package:ricochet_robots/domains/board/robot.dart';
 
 class History {
   RobotColors color;
