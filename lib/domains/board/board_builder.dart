@@ -420,6 +420,37 @@ const _canMoveRightBit = 1 << 1;
 const _canMoveDownBit = 1 << 2;
 const _canMoveLeftBit = 1 << 3;
 
+const rowLength = 16;
+
+@visibleForTesting
+List<List<NormalGrid>> toNormalGrids({required String id}) {
+  assert(id.length == rowLength * rowLength);
+  return intoChunks(id: id, chunkSize: rowLength)
+      .map((id) => toNormalGridRow(id: id))
+      .toList();
+}
+
+@visibleForTesting
+List<String> intoChunks({
+  required String id,
+  required int chunkSize,
+  List<String> result = const [],
+}) {
+  if (id.length <= chunkSize) {
+    return [...result, id];
+  }
+  return intoChunks(
+    id: id.substring(chunkSize),
+    chunkSize: chunkSize,
+    result: [...result, id.substring(0, chunkSize)],
+  );
+}
+
+List<NormalGrid> toNormalGridRow({required String id}) {
+  assert(id.length == 16);
+  return id.split('').map((char) => charToNormalGrid(char: char)).toList();
+}
+
 @visibleForTesting
 NormalGrid charToNormalGrid({required String char}) {
   final value = _chars.indexOf(char);

@@ -2,8 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ricochet_robots/domains/board/board_builder.dart';
 
 void main() {
-  group('toGrid', () {
-    test('', () {});
+  test('intoChunks', () {
+    const id = 'abcdefghijkl';
+    final result = intoChunks(id: id, chunkSize: 4);
+    expect(
+      result,
+      ['abcd', 'efgh', 'ijkl'],
+    );
   });
 
   test('charToNormalGrid', () {
