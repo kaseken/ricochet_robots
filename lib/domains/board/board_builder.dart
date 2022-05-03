@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
@@ -429,9 +430,19 @@ const _normalGoalIdStart = _baseIdStart + _baseIdLength;
 const _normalGoalIdLength = 4 * 4 * 2;
 const _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
 const _wildGoalIdLength = 2;
+const _robotIdStart = _wildGoalIdStart + _wildGoalIdLength;
+const _robotIdLength = 4 * 2;
+const _idLength =
+    _baseIdLength + _normalGoalIdLength + _wildGoalIdLength + _robotIdLength;
+
+Board toBoard({required String id}) => Board(
+      grids: toGrids(id: id),
+      robotPositions: toRobotPositions(id: id),
+    );
 
 @visibleForTesting
 List<List<Grid>> toGrids({required String id}) {
+  assert(id.length == _baseIdLength);
   final baseId = id.substring(_baseIdStart, _baseIdStart + _baseIdLength);
   final baseGrids = addEdges(grids: toNormalGrids(id: baseId));
   final normalGoalId = id.substring(
@@ -556,14 +567,14 @@ List<Tuple3<GoalTypes, RobotColors, Position>> getNormalGoalPositions({
       return Tuple3(
         GoalTypes.values[i],
         RobotColors.values[j],
-        getGoalPosition(id: goalId.substring(start, start + 2)),
+        getPosition(id: goalId.substring(start, start + 2)),
       );
     });
   }).expand((list) => list).toList();
 }
 
 @visibleForTesting
-Position getGoalPosition({required String id}) {
+Position getPosition({required String id}) {
   assert(id.length == 2);
   final x = _chars.indexOf(id[0]);
   final y = _chars.indexOf(id[1]);
@@ -600,7 +611,7 @@ List<List<Grid>> putWildGoalGrid({
   required String id,
 }) {
   assert(id.length == _wildGoalIdLength);
-  final position = getGoalPosition(id: id);
+  final position = getPosition(id: id);
   return List.generate(rowLength, (y) {
     return List.generate(rowLength, (x) {
       if (position.x != x || position.y != y) {
@@ -614,4 +625,18 @@ List<List<Grid>> putWildGoalGrid({
       );
     });
   });
+}
+
+RobotPositions toRobotPositions({required String id}) {
+  assert(id.length == _idLength);
+  final robotId = id.substring(_robotIdStart, _robotIdStart + _robotIdLength);
+  return Map.fromEntries(
+    List.generate(
+      RobotColors.values.length,
+      (i) => MapEntry(
+        RobotColors.values[i],
+        getPosition(id: robotId.substring(i * 2, i * 2 + 2)),
+      ),
+    ),
+  );
 }
