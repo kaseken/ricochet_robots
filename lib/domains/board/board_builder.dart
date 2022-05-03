@@ -25,7 +25,7 @@ class BoardBuilder {
     return positions;
   }
 
-  static List<List<Grid>> buildDefaultGrids() {
+  static List<List<Grid>> get defaultGrids {
     return [
       [
         NormalGrid(canMoveUp: false, canMoveLeft: false),
@@ -426,9 +426,8 @@ String gridsToId({required List<List<Grid>> grids}) {
 const _baseIdStart = 0;
 const _baseIdLength = rowLength * rowLength;
 const _normalGoalIdStart = _baseIdStart + _baseIdLength;
-final _normalGoalIdLength =
-    GoalTypes.values.length * RobotColors.values.length * 2;
-final _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
+const _normalGoalIdLength = 4 * 4 * 2;
+const _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
 const _wildGoalIdLength = 2;
 
 @visibleForTesting

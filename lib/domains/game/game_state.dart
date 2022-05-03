@@ -33,7 +33,7 @@ class GameState with _$GameState {
 
   /// Reset state and returns new state.
   static GameState _reset({Board? newBoard, GameWidgetMode? mode}) {
-    final board = newBoard ?? Board(grids: BoardBuilder.buildDefaultGrids());
+    final board = newBoard ?? Board(grids: BoardBuilder.defaultGrids);
     return GameState(
       mode: mode ?? GameWidgetMode.play,
       board: board,
