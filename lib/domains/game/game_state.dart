@@ -32,19 +32,18 @@ class GameState with _$GameState {
     }
     try {
       final board = toBoard(id: boardId);
-      return _reset(newBoard: board);
+      return _reset(board: board);
     } on Exception {
       return _reset();
     }
   }
 
   /// Reset state and returns new state.
-  static GameState _reset({Board? newBoard, GameWidgetMode? mode}) {
-    final board = newBoard ?? Board(grids: BoardBuilder.defaultGrids);
+  static GameState _reset({Board? board, Goal? goal, GameWidgetMode? mode}) {
     return GameState(
       mode: mode ?? GameWidgetMode.play,
-      board: board,
-      goal: GoalBuilder.build(),
+      board: board ?? Board(grids: BoardBuilder.defaultGrids),
+      goal: goal ?? GoalBuilder.build(),
       histories: List.empty(growable: true),
       focusedRobot: const Robot(color: RobotColors.red),
     );

@@ -11,21 +11,21 @@ typedef Grids = List<List<Grid>>;
 
 class Board {
   final Grids grids;
-  late final RobotPositions robotPositions;
+  final RobotPositions robotPositions;
 
-  Board({required this.grids, RobotPositions? robotPositions}) {
-    if (robotPositions != null) {
-      this.robotPositions = robotPositions;
-      return;
-    }
+  Board({
+    required this.grids,
+    RobotPositions? robotPositions,
+  }) : robotPositions = robotPositions ?? initRobotPositions(grids: grids);
+
+  static RobotPositions initRobotPositions({required List<List<Grid>> grids}) {
     final positions = BoardBuilder.buildInitialPositions(grids);
-    assert(positions.length == 4);
-    this.robotPositions = {
-      RobotColors.red: positions[0],
-      RobotColors.blue: positions[1],
-      RobotColors.green: positions[2],
-      RobotColors.yellow: positions[3],
-    };
+    return Map.fromEntries(
+      List.generate(
+        RobotColors.values.length,
+        (i) => MapEntry(RobotColors.values[i], positions[i]),
+      ),
+    );
   }
 
   Board _updatedWith({
@@ -73,6 +73,7 @@ class Board {
   }
 
   bool hasRobotOnGrid(Position position) => getRobotIfExists(position) != null;
+
   Robot? getRobotIfExists(Position position) {
     return robotPositions.entries
         .where((entry) {
@@ -84,6 +85,7 @@ class Board {
 
   bool hasGoalOnGrid(Position position) =>
       getGoalGridIfExists(position) != null;
+
   GoalGrid? getGoalGridIfExists(Position position) {
     final grid = grids[position.y][position.x];
     if (grid is NormalGoalGrid) {
