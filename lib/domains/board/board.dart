@@ -1,22 +1,38 @@
 import 'package:collection/collection.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ricochet_robots/domains/board/board_builder.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 
+part 'board.freezed.dart';
+
 typedef RobotPositions = Map<RobotColors, Position>;
 
 typedef Grids = List<List<Grid>>;
 
-class Board {
-  final Grids grids;
-  final RobotPositions robotPositions;
+@freezed
+class Board with _$Board {
+  const factory Board({
+    required Grids grids,
+    required Goal goal,
+    required RobotPositions robotPositions,
+  }) = _Board;
 
-  Board({
-    required this.grids,
+  const Board._();
+
+  static Board init({
+    required Grids grids,
+    Goal? goal,
     RobotPositions? robotPositions,
-  }) : robotPositions = robotPositions ?? initRobotPositions(grids: grids);
+  }) {
+    return Board(
+      grids: grids,
+      goal: goal ?? GoalBuilder.build(),
+      robotPositions: robotPositions ?? initRobotPositions(grids: grids),
+    );
+  }
 
   static RobotPositions initRobotPositions({required List<List<Grid>> grids}) {
     final positions = BoardBuilder.buildInitialPositions(grids);
@@ -28,16 +44,6 @@ class Board {
     );
   }
 
-  Board _updatedWith({
-    Grids? grids,
-    RobotPositions? robotPositions,
-  }) {
-    return Board(
-      grids: grids ?? this.grids,
-      robotPositions: robotPositions ?? this.robotPositions,
-    );
-  }
-
   Board moved(Robot robot, Directions direction) {
     final position = robotPositions[robot.color];
     if (position == null) {
@@ -46,7 +52,8 @@ class Board {
     final otherRobotPositions = robotPositions.entries
         .where((e) => e.key != robot.color)
         .map((e) => e.value);
-    final updatedRobotPositions = robotPositions;
+    final updatedRobotPositions =
+        Map<RobotColors, Position>.from(robotPositions);
     var to = position; // TODO: make it immutable.
     while (grids[to.y][to.x].canMove(direction)) {
       to = to.next(direction);
@@ -55,20 +62,21 @@ class Board {
           .where((p) => p.x == to.x && p.y == to.y)
           .isNotEmpty;
       if (otherRobotExists) {
-        return _updatedWith(robotPositions: updatedRobotPositions);
+        return copyWith(robotPositions: updatedRobotPositions);
       }
       updatedRobotPositions[robot.color] = to;
     }
-    return _updatedWith(robotPositions: updatedRobotPositions);
+    return copyWith(robotPositions: updatedRobotPositions);
   }
 
   Board movedTo(Robot robot, Position position) {
-    final updatedRobotPositions = robotPositions;
+    final updatedRobotPositions =
+        Map<RobotColors, Position>.from(robotPositions);
     updatedRobotPositions[robot.color] = position;
-    return _updatedWith(robotPositions: updatedRobotPositions);
+    return copyWith(robotPositions: updatedRobotPositions);
   }
 
-  bool isGoal(Position position, Goal goal, Robot robot) {
+  bool isGoal(Position position, Robot robot) {
     return grids[position.y][position.x].isGoal(goal, robot);
   }
 

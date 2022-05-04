@@ -434,6 +434,7 @@ const _idLength =
 Board toBoard({required String id}) => Board(
       grids: toGrids(id: id),
       robotPositions: toRobotPositions(id: id),
+      goal: const Goal(), // FIXME
     );
 
 @visibleForTesting

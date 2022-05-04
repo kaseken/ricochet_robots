@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_builder.dart';
 import 'package:ricochet_robots/domains/board/board_id.dart';
+import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 
@@ -15,7 +16,11 @@ void main() {
         const MapEntry(RobotColors.green, Position(x: 15, y: 7)),
         const MapEntry(RobotColors.yellow, Position(x: 0, y: 13)),
       ]);
-      final board = Board(grids: grids, robotPositions: robotPositions);
+      final board = Board(
+        grids: grids,
+        robotPositions: robotPositions,
+        goal: const Goal(), // FIXME:
+      );
       final boardId = BoardId.from(board: board);
       expect(
         boardId.value,

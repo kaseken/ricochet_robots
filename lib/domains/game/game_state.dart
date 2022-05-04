@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_builder.dart';
-import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/history.dart';
@@ -19,7 +18,6 @@ class GameState with _$GameState {
 
     /// Properties for playing.
     required Board board,
-    required Goal goal,
     required List<History> histories,
     required Robot focusedRobot,
   }) = _GameState;
@@ -39,11 +37,10 @@ class GameState with _$GameState {
   }
 
   /// Reset state and returns new state.
-  static GameState _reset({Board? board, Goal? goal, GameWidgetMode? mode}) {
+  static GameState _reset({Board? board, GameWidgetMode? mode}) {
     return GameState(
       mode: mode ?? GameWidgetMode.play,
-      board: board ?? Board(grids: BoardBuilder.defaultGrids),
-      goal: goal ?? GoalBuilder.build(),
+      board: board ?? Board.init(grids: BoardBuilder.defaultGrids),
       histories: List.empty(growable: true),
       focusedRobot: const Robot(color: RobotColors.red),
     );
@@ -58,7 +55,7 @@ class GameState with _$GameState {
       return this;
     }
     final nextBoard = board.moved(focusedRobot, direction);
-    final nextPosition = board.robotPositions[focusedRobot.color];
+    final nextPosition = nextBoard.robotPositions[focusedRobot.color];
     if (nextPosition == null) {
       return copyWith(board: nextBoard);
     }
@@ -69,7 +66,7 @@ class GameState with _$GameState {
     final nextHistories = !nextPosition.equals(currentPosition)
         ? [...histories, history]
         : histories;
-    if (board.isGoal(nextPosition, goal, focusedRobot)) {
+    if (board.isGoal(nextPosition, focusedRobot)) {
       return copyWith(
         mode: GameWidgetMode.showResult,
         board: nextBoard,

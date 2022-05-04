@@ -30,7 +30,7 @@ class GameWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       HeaderWidget(
-                        goal: state.goal,
+                        goal: state.board.goal,
                         histories: state.histories,
                         currentMode: state.mode,
                       ),
