@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
 
 import '../board/position.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  GameBloc({required String? boardId})
+  GameBloc({required BoardId? boardId})
       : super(GameState.initialize(boardId: boardId)) {
     on<SelectColorEvent>(
       (event, emit) => emit(state.onColorSelected(color: event.color)),

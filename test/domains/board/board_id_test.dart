@@ -24,8 +24,26 @@ void main() {
       final boardId = BoardId.from(board: board);
       expect(
         boardId.value,
-        '6c6eaeeeeeec6aec7bfd6fffffffd6fd7c7ffffff97ffffd7fffff97fefffff97fffffeffffffffc3ffffffffffbfd3d6fd3fffbbffc7fed7ffefbd007fffffd7ffffc5007fffffd797ffffeafffff957efd3fffc7ffffe93fffefffffffd3fc6ffffbffffbffefd7ffbfc7ffd6ffffd7fd6fffffffffffd3bbbbb93bbb93bb95dade563d1364ae98a92123e4119dbb658cce2f70d30',
+        'r6WKXKXIqKNX-m-----m-nN----Vv--Zv---B-X---B----L-----3------_-QZrZf-_X-Yv_R--LLg1----n---507---Zun---G---Vl_-j--N---Wj--X----ZfYr--X--_--LR-_-N--m---n-m-------ZeXKXAXKVeXBtHulzQjpaWoGi4zV16tKSmcPyZMQM',
       );
     });
+  });
+
+  test('to64based', () {
+    const from =
+        '420c41461c824028b30d38f41149351559761969b71d79f8218a39259a7a29aabb2dbafc31cb3d35db7e39ebbf3d';
+    expect(
+      to64based(from: from),
+      '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    );
+  });
+
+  test('to16based', () {
+    const from =
+        '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    expect(
+      to16based(from: from),
+      '420c41461c824028b30d38f41149351559761969b71d79f8218a39259a7a29aabb2dbafc31cb3d35db7e39ebbf3d',
+    );
   });
 }

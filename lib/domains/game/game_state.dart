@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_builder.dart';
+import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/history.dart';
@@ -24,12 +25,12 @@ class GameState with _$GameState {
 
   bool get shouldShowResult => mode == GameWidgetMode.showResult;
 
-  static GameState initialize({required String? boardId}) {
+  static GameState initialize({required BoardId? boardId}) {
     if (boardId == null) {
       return _reset();
     }
     try {
-      final board = toBoard(id: boardId);
+      final board = toBoard(boardId: boardId);
       return _reset(board: board);
     } on Exception {
       return _reset();
