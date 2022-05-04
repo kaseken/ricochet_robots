@@ -23,7 +23,7 @@ void main() {
       );
       final boardId = BoardId.from(board: board);
       expect(
-        boardId.value,
+        boardId.encoded,
         'r6WKXKXIqKNX-m-----m-nN----Vv--Zv---B-X---B----L-----3------_-QZrZf-_X-Yv_R--LLg1----n---507---Zun---G---Vl_-j--N---Wj--X----ZfYr--X--_--LR-_-N--m---n-m-------ZeXKXAXKVeXBtHulzQjpaWoGi4zV16tKSmcPyZMQM',
       );
     });

@@ -32,7 +32,7 @@ class BoardId {
     );
   }
 
-  String get value => to64based(
+  String get encoded => to64based(
         from: baseId + normalGoalId + wildGoalId + robotId + goalId,
       );
 
