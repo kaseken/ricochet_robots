@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:ricochet_robots/domains/board/board.dart';
+import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
 import 'package:ricochet_robots/domains/game/history.dart';
 
 class HeaderWidget extends StatelessWidget {
-  final Goal goal;
+  final Board board;
   final List<History> histories;
   final GameWidgetMode currentMode;
 
   const HeaderWidget({
     Key? key,
-    required this.goal,
+    required this.board,
     required this.histories,
     required this.currentMode,
   }) : super(key: key);
@@ -62,22 +65,33 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 
+  Future<void> _copyUrlToClipBoard() async {
+    final id = BoardId.from(board: board);
+    await Clipboard.setData(
+      ClipboardData(text: '${Uri.base.toString()}?id=${id.encoded}'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               Text("Move ", style: _textStyle),
-              _target(goal),
+              _target(board.goal),
               Text(" to ", style: _textStyle),
-              _goal(goal),
+              _goal(board.goal),
             ],
           ),
+          const Expanded(child: SizedBox.shrink()),
           Text("${histories.length.toString()} moves", style: _textStyle),
+          IconButton(
+            onPressed: _copyUrlToClipBoard,
+            icon: const Icon(Icons.link, color: Colors.grey, size: 24.0),
+          ),
         ],
       ),
     );

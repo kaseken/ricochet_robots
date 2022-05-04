@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
+import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
@@ -420,55 +421,24 @@ class BoardBuilder {
   }
 }
 
-const _baseIdStart = 0;
-const _baseIdLength = rowLength * rowLength;
-const _normalGoalIdStart = _baseIdStart + _baseIdLength;
-const _normalGoalIdLength = 4 * 4 * 2;
-const _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
-const _wildGoalIdLength = 2;
-const _robotIdStart = _wildGoalIdStart + _wildGoalIdLength;
-const _robotIdLength = 4 * 2;
-const _idLength =
-    _baseIdLength + _normalGoalIdLength + _wildGoalIdLength + _robotIdLength;
-
-Board toBoard({required String id}) => Board(
-      grids: toGrids(id: id),
-      robotPositions: toRobotPositions(id: id),
+Board toBoard({required BoardId boardId}) => Board(
+      grids: toGrids(boardId: boardId),
+      robotPositions: toRobotPositions(boardId: boardId),
+      goal: toGoal(boardId: boardId),
     );
 
 @visibleForTesting
-List<List<Grid>> toGrids({required String id}) {
-  assert(id.length == _idLength);
-  final baseId = id.substring(_baseIdStart, _baseIdStart + _baseIdLength);
-  final baseGrids = addEdges(grids: toNormalGrids(id: baseId));
-  final normalGoalId = id.substring(
-    _normalGoalIdStart,
-    _normalGoalIdStart + _normalGoalIdLength,
-  );
+List<List<Grid>> toGrids({required BoardId boardId}) {
+  final baseGrids = addEdges(grids: toNormalGrids(id: boardId.baseId));
   final gridsWithNormalGoal = putNormalGoals(
     baseGrids: baseGrids,
-    goalId: normalGoalId,
+    normalGoalId: boardId.normalGoalId,
   );
-  final wildGoalId = id.substring(
-    _wildGoalIdStart,
-    _wildGoalIdStart + _wildGoalIdLength,
+  return putWildGoalGrid(
+    grids: gridsWithNormalGoal,
+    wildGoalId: boardId.wildGoalId,
   );
-  return putWildGoalGrid(grids: gridsWithNormalGoal, id: wildGoalId);
 }
-
-final _chars = [
-  /// '0' to '9'
-  ...(List.generate(10, (i) => i.toString())),
-
-  /// 'a' to 'z'
-  ...(List.generate(26, (i) => String.fromCharCode('a'.codeUnitAt(0) + i))),
-
-  /// 'A' to 'Z'
-  ...(List.generate(26, (i) => String.fromCharCode('A'.codeUnitAt(0) + i))),
-
-  '_',
-  '-',
-];
 
 const canMoveUpBit = 1 << 0;
 const canMoveRightBit = 1 << 1;
@@ -479,7 +449,6 @@ const rowLength = 16;
 
 @visibleForTesting
 List<List<NormalGrid>> toNormalGrids({required String id}) {
-  assert(id.length == _baseIdLength);
   return intoChunks(id: id, chunkSize: rowLength)
       .map((id) => toNormalGridRow(id: id))
       .toList();
@@ -508,7 +477,7 @@ List<NormalGrid> toNormalGridRow({required String id}) {
 
 @visibleForTesting
 NormalGrid charToNormalGrid({required String char}) {
-  final value = _chars.indexOf(char);
+  final value = boardIdChars.indexOf(char);
   if (value < 0 || rowLength <= value) {
     /// Unexpected.
     return NormalGrid();
@@ -539,9 +508,9 @@ List<List<NormalGrid>> addEdges({required List<List<NormalGrid>> grids}) {
 @visibleForTesting
 List<List<Grid>> putNormalGoals({
   required List<List<NormalGrid>> baseGrids,
-  required String goalId,
+  required String normalGoalId,
 }) {
-  return getNormalGoalPositions(goalId: goalId)
+  return getNormalGoalPositions(normalGoalId: normalGoalId)
       .fold<List<List<Grid>>>(baseGrids, (grids, tuple) {
     return putNormalGoalGrid(
       grids: grids,
@@ -554,16 +523,15 @@ List<List<Grid>> putNormalGoals({
 
 @visibleForTesting
 List<Tuple3<GoalTypes, RobotColors, Position>> getNormalGoalPositions({
-  required String goalId,
+  required String normalGoalId,
 }) {
-  assert(goalId.length == _normalGoalIdLength);
   return List.generate(GoalTypes.values.length, (i) {
     return List.generate(RobotColors.values.length, (j) {
       final start = (i * RobotColors.values.length + j) * 2;
       return Tuple3(
         GoalTypes.values[i],
         RobotColors.values[j],
-        getPosition(id: goalId.substring(start, start + 2)),
+        getPosition(id: normalGoalId.substring(start, start + 2)),
       );
     });
   }).expand((list) => list).toList();
@@ -572,8 +540,8 @@ List<Tuple3<GoalTypes, RobotColors, Position>> getNormalGoalPositions({
 @visibleForTesting
 Position getPosition({required String id}) {
   assert(id.length == 2);
-  final x = _chars.indexOf(id[0]);
-  final y = _chars.indexOf(id[1]);
+  final x = boardIdChars.indexOf(id[0]);
+  final y = boardIdChars.indexOf(id[1]);
   assert(0 <= x && x < rowLength);
   assert(0 <= y && y < rowLength);
   return Position(x: x, y: y);
@@ -604,10 +572,9 @@ List<List<Grid>> putNormalGoalGrid({
 
 List<List<Grid>> putWildGoalGrid({
   required List<List<Grid>> grids,
-  required String id,
+  required String wildGoalId,
 }) {
-  assert(id.length == _wildGoalIdLength);
-  final position = getPosition(id: id);
+  final position = getPosition(id: wildGoalId);
   return List.generate(rowLength, (y) {
     return List.generate(rowLength, (x) {
       if (position.x != x || position.y != y) {
@@ -623,16 +590,33 @@ List<List<Grid>> putWildGoalGrid({
   });
 }
 
-RobotPositions toRobotPositions({required String id}) {
-  assert(id.length == _idLength);
-  final robotId = id.substring(_robotIdStart, _robotIdStart + _robotIdLength);
+RobotPositions toRobotPositions({required BoardId boardId}) {
   return Map.fromEntries(
     List.generate(
       RobotColors.values.length,
       (i) => MapEntry(
         RobotColors.values[i],
-        getPosition(id: robotId.substring(i * 2, i * 2 + 2)),
+        getPosition(id: boardId.robotId.substring(i * 2, i * 2 + 2)),
       ),
     ),
+  );
+}
+
+Goal toGoal({required BoardId boardId}) {
+  final goalIndex = int.tryParse(boardId.goalId[0]);
+  final colorIndex = int.tryParse(boardId.goalId[1]);
+  if (goalIndex == null ||
+      goalIndex < 0 ||
+      GoalTypes.values.length <= goalIndex) {
+    return const Goal();
+  }
+  if (colorIndex == null ||
+      colorIndex < 0 ||
+      RobotColors.values.length <= colorIndex) {
+    return const Goal();
+  }
+  return Goal(
+    type: GoalTypes.values[goalIndex],
+    color: RobotColors.values[colorIndex],
   );
 }

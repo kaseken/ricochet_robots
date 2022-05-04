@@ -12,12 +12,14 @@ class BoardId {
   final String normalGoalId;
   final String wildGoalId;
   final String robotId;
+  final String goalId;
 
   const BoardId({
     required this.baseId,
     required this.normalGoalId,
     required this.wildGoalId,
     required this.robotId,
+    required this.goalId,
   });
 
   static BoardId from({required Board board}) {
@@ -26,10 +28,49 @@ class BoardId {
       normalGoalId: toNormalGoalId(board: board),
       wildGoalId: toWildGoalId(board: board),
       robotId: toRobotId(board: board),
+      goalId: toGoalId(board: board),
     );
   }
 
-  String get value => baseId + normalGoalId + wildGoalId + robotId;
+  String get encoded => to64based(
+        from: baseId + normalGoalId + wildGoalId + robotId + goalId,
+      );
+
+  static const _baseIdStart = 0;
+  static const _baseIdLength = rowLength * rowLength;
+  static const _normalGoalIdStart = _baseIdStart + _baseIdLength;
+  static const _normalGoalIdLength = 4 * 4 * 2;
+  static const _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
+  static const _wildGoalIdLength = 2;
+  static const _robotIdStart = _wildGoalIdStart + _wildGoalIdLength;
+  static const _robotIdLength = 4 * 2;
+  static const _goalIdStart = _robotIdStart + _robotIdLength;
+  static const _goalIdLength = 2;
+  static const _idLength = _baseIdLength +
+      _normalGoalIdLength +
+      _wildGoalIdLength +
+      _robotIdLength +
+      _goalIdLength;
+
+  static BoardId? tryParse({required String rawId}) {
+    final is64based = rawId.split('').every((c) => base64Set.contains(c));
+    if (!is64based) {
+      return null;
+    }
+    final id = to16based(from: rawId);
+    if (id.length != _idLength) {
+      return null;
+    }
+    return BoardId(
+      baseId: id.substring(_baseIdStart, _baseIdStart + _baseIdLength),
+      normalGoalId: id.substring(
+          _normalGoalIdStart, _normalGoalIdStart + _normalGoalIdLength),
+      wildGoalId:
+          id.substring(_wildGoalIdStart, _wildGoalIdStart + _wildGoalIdLength),
+      robotId: id.substring(_robotIdStart, _robotIdStart + _robotIdLength),
+      goalId: id.substring(_goalIdStart, _goalIdStart + _goalIdLength),
+    );
+  }
 }
 
 @visibleForTesting
@@ -110,4 +151,65 @@ String toRobotId({required Board board}) {
     }
     return positionToId(position: position);
   }).join();
+}
+
+String toGoalId({required Board board}) {
+  final goalType = board.goal.type;
+  final goalColor = board.goal.color;
+  if (goalType == null || goalColor == null) {
+    return '44';
+  }
+  return GoalTypes.values.indexOf(goalType).toString() +
+      RobotColors.values.indexOf(goalColor).toString();
+}
+
+final boardIdChars = [
+  /// '0' to '9'
+  ...(List.generate(10, (i) => i.toString())),
+
+  /// 'a' to 'z'
+  ...(List.generate(26, (i) => String.fromCharCode('a'.codeUnitAt(0) + i))),
+
+  /// 'A' to 'Z'
+  ...(List.generate(26, (i) => String.fromCharCode('A'.codeUnitAt(0) + i))),
+
+  '_',
+  '-',
+];
+
+final base16Set = boardIdChars.take(16).toSet();
+final base64Set = boardIdChars.toSet();
+
+@visibleForTesting
+String to64based({required String from}) {
+  final is16based = from.split('').every((c) => base16Set.contains(c));
+  assert(is16based);
+  if (!is16based) {
+    throw Exception('Failed to convert to 64based string');
+  }
+  var value = BigInt.parse(from, radix: 16);
+  final result = List.empty(growable: true);
+  while (value > BigInt.zero) {
+    final i = value % BigInt.from(64);
+    result.add(boardIdChars[i.toInt()]);
+    value ~/= BigInt.from(64);
+  }
+  return result.reversed.join();
+}
+
+@visibleForTesting
+String to16based({required String from}) {
+  final is64based = from.split('').every((c) => base64Set.contains(c));
+  assert(is64based);
+  if (!is64based) {
+    throw Exception('Failed to convert to 16based string');
+  }
+  var value = BigInt.zero;
+  for (final char in from.split('')) {
+    final i = boardIdChars.indexOf(char);
+    assert(0 <= i && i < 64);
+    value *= BigInt.from(64);
+    value += BigInt.from(i);
+  }
+  return value.toRadixString(16);
 }

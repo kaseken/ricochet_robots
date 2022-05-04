@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/widgets/game_widget.dart';
 
@@ -17,10 +18,12 @@ class App extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.grey),
       onGenerateRoute: (settings) {
         /// Read id from query parameters.
-        final id = Uri.parse(settings.name ?? '/').queryParameters['id'];
+        final id = Uri.parse(settings.name ?? '/').queryParameters['id'] ?? '';
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (BuildContext context) => GameBloc(boardId: id),
+            create: (BuildContext context) => GameBloc(
+              boardId: BoardId.tryParse(rawId: id),
+            ),
             child: const Home(title: 'Ricochet Robots Trainer'),
           ),
         );
