@@ -12,12 +12,14 @@ class BoardId {
   final String normalGoalId;
   final String wildGoalId;
   final String robotId;
+  final String goalId;
 
   const BoardId({
     required this.baseId,
     required this.normalGoalId,
     required this.wildGoalId,
     required this.robotId,
+    required this.goalId,
   });
 
   static BoardId from({required Board board}) {
@@ -26,10 +28,11 @@ class BoardId {
       normalGoalId: toNormalGoalId(board: board),
       wildGoalId: toWildGoalId(board: board),
       robotId: toRobotId(board: board),
+      goalId: toGoalId(board: board),
     );
   }
 
-  String get value => baseId + normalGoalId + wildGoalId + robotId;
+  String get value => baseId + normalGoalId + wildGoalId + robotId + goalId;
 }
 
 @visibleForTesting
@@ -110,4 +113,14 @@ String toRobotId({required Board board}) {
     }
     return positionToId(position: position);
   }).join();
+}
+
+String toGoalId({required Board board}) {
+  final goalType = board.goal.type;
+  final goalColor = board.goal.color;
+  if (goalType == null || goalColor == null) {
+    return '44';
+  }
+  return GoalTypes.values.indexOf(goalType).toString() +
+      RobotColors.values.indexOf(goalColor).toString();
 }

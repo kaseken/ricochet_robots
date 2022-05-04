@@ -19,12 +19,12 @@ void main() {
       final board = Board(
         grids: grids,
         robotPositions: robotPositions,
-        goal: const Goal(), // FIXME:
+        goal: const Goal(type: GoalTypes.moon, color: RobotColors.red),
       );
       final boardId = BoardId.from(board: board);
       expect(
         boardId.value,
-        '6c6eaeeeeeec6aec7bfd6fffffffd6fd7c7ffffff97ffffd7fffff97fefffff97fffffeffffffffc3ffffffffffbfd3d6fd3fffbbffc7fed7ffefbd007fffffd7ffffc5007fffffd797ffffeafffff957efd3fffc7ffffe93fffefffffffd3fc6ffffbffffbffefd7ffbfc7ffd6ffffd7fd6fffffffffffd3bbbbb93bbb93bb95dade563d1364ae98a92123e4119dbb658cce2f70d',
+        '6c6eaeeeeeec6aec7bfd6fffffffd6fd7c7ffffff97ffffd7fffff97fefffff97fffffeffffffffc3ffffffffffbfd3d6fd3fffbbffc7fed7ffefbd007fffffd7ffffc5007fffffd797ffffeafffff957efd3fffc7ffffe93fffefffffffd3fc6ffffbffffbffefd7ffbfc7ffd6ffffd7fd6fffffffffffd3bbbbb93bbb93bb95dade563d1364ae98a92123e4119dbb658cce2f70d30',
       );
     });
   });

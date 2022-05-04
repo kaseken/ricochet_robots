@@ -428,13 +428,19 @@ const _wildGoalIdStart = _normalGoalIdStart + _normalGoalIdLength;
 const _wildGoalIdLength = 2;
 const _robotIdStart = _wildGoalIdStart + _wildGoalIdLength;
 const _robotIdLength = 4 * 2;
-const _idLength =
-    _baseIdLength + _normalGoalIdLength + _wildGoalIdLength + _robotIdLength;
+const _goalIdStart = _robotIdStart + _robotIdLength;
+const _goalIdLength = 2;
+
+const _idLength = _baseIdLength +
+    _normalGoalIdLength +
+    _wildGoalIdLength +
+    _robotIdLength +
+    _goalIdLength;
 
 Board toBoard({required String id}) => Board(
       grids: toGrids(id: id),
       robotPositions: toRobotPositions(id: id),
-      goal: const Goal(), // FIXME
+      goal: toGoal(id: id),
     );
 
 @visibleForTesting
@@ -635,5 +641,27 @@ RobotPositions toRobotPositions({required String id}) {
         getPosition(id: robotId.substring(i * 2, i * 2 + 2)),
       ),
     ),
+  );
+}
+
+Goal toGoal({required String id}) {
+  assert(id.length == _idLength);
+  final goalId = id.substring(_goalIdStart, _goalIdStart + _goalIdLength);
+  assert(goalId.length == 2);
+  final goalIndex = int.tryParse(goalId[0]);
+  final colorIndex = int.tryParse(goalId[1]);
+  if (goalIndex == null ||
+      goalIndex < 0 ||
+      GoalTypes.values.length <= goalIndex) {
+    return const Goal();
+  }
+  if (colorIndex == null ||
+      colorIndex < 0 ||
+      RobotColors.values.length <= colorIndex) {
+    return const Goal();
+  }
+  return Goal(
+    type: GoalTypes.values[goalIndex],
+    color: RobotColors.values[colorIndex],
   );
 }
