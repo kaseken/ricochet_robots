@@ -10,7 +10,7 @@ import 'package:ricochet_robots/domains/game/history.dart';
 class HeaderWidget extends StatelessWidget {
   final Board board;
   final List<History> histories;
-  final GameWidgetMode currentMode;
+  final GameMode currentMode;
 
   const HeaderWidget({
     Key? key,

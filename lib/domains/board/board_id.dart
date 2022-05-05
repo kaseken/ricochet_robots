@@ -78,7 +78,7 @@ String toBaseId({required Board board}) {
   return List.generate(rowLength, (y) {
     return List.generate(
       rowLength,
-      (x) => toGridId(grid: board.grids[y][x]),
+      (x) => toGridId(grid: board.grids.at(position: Position(x: x, y: y))),
     ).join();
   }).join();
 }
@@ -115,7 +115,7 @@ String toNormalGoalPositionId({
 }) {
   final position = List.generate(rowLength, (y) {
     return List.generate(rowLength, (x) {
-      final grid = board.grids[y][x];
+      final grid = board.grids.at(position: Position(x: x, y: y));
       if (grid is NormalGoalGrid &&
           grid.color == color &&
           grid.type == goalType) {
@@ -133,7 +133,7 @@ String positionToId({required Position position}) =>
 String toWildGoalId({required Board board}) {
   final position = List.generate(rowLength, (y) {
     return List.generate(rowLength, (x) {
-      final grid = board.grids[y][x];
+      final grid = board.grids.at(position: Position(x: x, y: y));
       if (grid is WildGoalGrid) {
         return Position(x: x, y: y);
       }
@@ -144,13 +144,10 @@ String toWildGoalId({required Board board}) {
 }
 
 String toRobotId({required Board board}) {
-  return RobotColors.values.map((color) {
-    final position = board.robotPositions[color];
-    if (position == null) {
-      throw Exception('Robot not found, color: $color');
-    }
-    return positionToId(position: position);
-  }).join();
+  return RobotColors.values
+      .map((color) =>
+          positionToId(position: board.robotPositions.position(color: color)))
+      .join();
 }
 
 String toGoalId({required Board board}) {

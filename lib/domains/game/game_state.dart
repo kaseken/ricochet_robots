@@ -8,14 +8,14 @@ import 'package:ricochet_robots/domains/game/history.dart';
 
 part 'game_state.freezed.dart';
 
-enum GameWidgetMode { play, showResult }
+enum GameMode { play, showResult }
 
 @freezed
 class GameState with _$GameState {
   const GameState._();
 
   const factory GameState({
-    required GameWidgetMode mode,
+    required GameMode mode,
 
     /// Properties for playing.
     required Board board,
@@ -23,7 +23,7 @@ class GameState with _$GameState {
     required Robot focusedRobot,
   }) = _GameState;
 
-  bool get shouldShowResult => mode == GameWidgetMode.showResult;
+  bool get shouldShowResult => mode == GameMode.showResult;
 
   static GameState initialize({required BoardId? boardId}) {
     if (boardId == null) {
@@ -38,9 +38,9 @@ class GameState with _$GameState {
   }
 
   /// Reset state and returns new state.
-  static GameState _reset({Board? board, GameWidgetMode? mode}) {
+  static GameState _reset({Board? board, GameMode? mode}) {
     return GameState(
-      mode: mode ?? GameWidgetMode.play,
+      mode: mode ?? GameMode.play,
       board: board ?? Board.init(grids: BoardBuilder.defaultGrids),
       histories: List.empty(growable: true),
       focusedRobot: const Robot(color: RobotColors.red),
@@ -51,25 +51,20 @@ class GameState with _$GameState {
       copyWith(focusedRobot: Robot(color: color));
 
   GameState onDirectionSelected({required Directions direction}) {
-    final currentPosition = board.robotPositions[focusedRobot.color];
-    if (currentPosition == null) {
-      return this;
-    }
+    final currentPosition =
+        board.robotPositions.position(color: focusedRobot.color);
     final nextBoard = board.moved(focusedRobot, direction);
-    final nextPosition = nextBoard.robotPositions[focusedRobot.color];
-    if (nextPosition == null) {
-      return copyWith(board: nextBoard);
-    }
+    final nextPosition =
+        nextBoard.robotPositions.position(color: focusedRobot.color);
     final history = History(
       color: focusedRobot.color,
       position: currentPosition,
     );
-    final nextHistories = !nextPosition.equals(currentPosition)
-        ? [...histories, history]
-        : histories;
+    final nextHistories =
+        nextPosition != currentPosition ? [...histories, history] : histories;
     if (board.isGoal(nextPosition, focusedRobot)) {
       return copyWith(
-        mode: GameWidgetMode.showResult,
+        mode: GameMode.showResult,
         board: nextBoard,
         histories: nextHistories,
       );
@@ -91,5 +86,14 @@ class GameState with _$GameState {
     );
   }
 
-  GameState onRestart() => _reset(mode: GameWidgetMode.play);
+  GameState onRestart() => shuffleRobots.shuffleGoal.initialized;
+
+  GameState get shuffleRobots => copyWith(board: board.robotShuffled);
+
+  GameState get shuffleGoal => copyWith(board: board.goalShuffled);
+
+  GameState get initialized => copyWith(
+        mode: GameMode.play,
+        histories: [],
+      );
 }

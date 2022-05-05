@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ricochet_robots/domains/board/widgets/board_widget.dart';
 import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
-import 'package:ricochet_robots/widgets/board_widget.dart';
-import 'package:ricochet_robots/widgets/control_buttons.dart';
-import 'package:ricochet_robots/widgets/header_widget.dart';
-import 'package:ricochet_robots/widgets/result_dialog.dart';
+import 'package:ricochet_robots/domains/game/widgets/control_buttons.dart';
+import 'package:ricochet_robots/domains/game/widgets/header_widget.dart';
+import 'package:ricochet_robots/domains/game/widgets/result_dialog.dart';
 
 class GameWidget extends StatelessWidget {
   const GameWidget({Key? key}) : super(key: key);

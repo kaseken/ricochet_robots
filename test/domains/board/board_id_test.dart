@@ -5,17 +5,18 @@ import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/board/robot_positions.dart';
 
 void main() {
   group('BoardId', () {
     test('from', () {
       final grids = BoardBuilder.defaultGrids;
-      final robotPositions = Map.fromEntries([
-        const MapEntry(RobotColors.red, Position(x: 12, y: 12)),
-        const MapEntry(RobotColors.blue, Position(x: 14, y: 2)),
-        const MapEntry(RobotColors.green, Position(x: 15, y: 7)),
-        const MapEntry(RobotColors.yellow, Position(x: 0, y: 13)),
-      ]);
+      const robotPositions = RobotPositions(
+        red: Position(x: 12, y: 12),
+        blue: Position(x: 14, y: 2),
+        green: Position(x: 15, y: 7),
+        yellow: Position(x: 0, y: 13),
+      );
       final board = Board(
         grids: grids,
         robotPositions: robotPositions,
