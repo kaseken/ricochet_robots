@@ -27,9 +27,7 @@ class GameState with _$GameState {
     final board = boardId != null
         ? toBoard(boardId: boardId)
         : toBoard(boardId: BoardId.defaultId).goalShuffled.robotShuffled;
-    return init(
-      board: board,
-    );
+    return init(board: board);
   }
 
   /// Reset state and returns new state.
@@ -82,11 +80,8 @@ class GameState with _$GameState {
     );
   }
 
-  GameState onRestart() => shuffleRobots.shuffleGoal.initialized;
-
-  GameState get shuffleRobots => copyWith(board: board.robotShuffled);
-
-  GameState get shuffleGoal => copyWith(board: board.goalShuffled);
+  GameState onRestart() =>
+      copyWith(board: board.robotShuffled.goalShuffled).initialized;
 
   GameState get initialized => copyWith(
         mode: GameMode.play,
