@@ -78,4 +78,12 @@ class Board with _$Board {
 
   Robot? getRobotIfExists({required Position position}) =>
       robotPositions.getRobotIfExists(position: position);
+
+  Board get goalShuffled {
+    return copyWith(goal: Goal.random);
+  }
+
+  Board get robotShuffled {
+    return copyWith(robotPositions: RobotPositions.random(grids: grids));
+  }
 }
