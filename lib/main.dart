@@ -22,7 +22,7 @@ class App extends StatelessWidget {
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (BuildContext context) => GameBloc(
-              boardId: BoardId.tryParse(rawId: id),
+              boardId: BoardId.tryParse(encoded: id),
             ),
             child: const Home(title: 'Ricochet Robots Trainer'),
           ),

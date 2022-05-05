@@ -31,22 +31,13 @@ class Board with _$Board {
   }
 
   Board moved(Robot robot, Directions direction) {
-    final position = robotPositions.position(color: robot.color);
-    final otherRobotPositions = robotPositions.others(color: robot.color);
-    var updatedRobotPositions = robotPositions; // TODO: make it immutable.
-    var to = position; // TODO: make it immutable.
-    while (grids.at(position: to).canMove(direction)) {
-      to = to.next(direction);
-      // TODO: refactor
-      if (otherRobotPositions.contains(to)) {
-        return copyWith(robotPositions: updatedRobotPositions);
-      }
-      updatedRobotPositions = updatedRobotPositions.move(
-        color: robot.color,
-        to: to,
-      );
-    }
-    return copyWith(robotPositions: updatedRobotPositions);
+    return copyWith(
+      robotPositions: robotPositions.movedAsPossible(
+        board: this,
+        robot: robot,
+        direction: direction,
+      ),
+    );
   }
 
   Board movedTo(Robot robot, Position position) {

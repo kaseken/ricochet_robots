@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
 import 'package:ricochet_robots/domains/game/history.dart';
 
 class HeaderWidget extends StatelessWidget {
+  static const _iconSize = 24.0;
+
   final Board board;
   final List<History> histories;
   final GameMode currentMode;
@@ -88,9 +92,22 @@ class HeaderWidget extends StatelessWidget {
           ),
           const Expanded(child: SizedBox.shrink()),
           Text("${histories.length.toString()} moves", style: _textStyle),
+          const SizedBox(width: 8.0),
+          IconButton(
+            onPressed: () => context.read<GameBloc>().add(const RestartEvent()),
+            icon: const Icon(
+              Icons.refresh,
+              color: Colors.grey,
+              size: _iconSize,
+            ),
+          ),
           IconButton(
             onPressed: _copyUrlToClipBoard,
-            icon: const Icon(Icons.link, color: Colors.grey, size: 24.0),
+            icon: const Icon(
+              Icons.link,
+              color: Colors.grey,
+              size: _iconSize,
+            ),
           ),
         ],
       ),

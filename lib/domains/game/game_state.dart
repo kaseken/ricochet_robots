@@ -16,8 +16,6 @@ class GameState with _$GameState {
 
   const factory GameState({
     required GameMode mode,
-
-    /// Properties for playing.
     required Board board,
     required List<History> histories,
     required Robot focusedRobot,
@@ -26,23 +24,19 @@ class GameState with _$GameState {
   bool get shouldShowResult => mode == GameMode.showResult;
 
   static GameState initialize({required BoardId? boardId}) {
-    if (boardId == null) {
-      return _reset();
-    }
-    try {
-      final board = toBoard(boardId: boardId);
-      return _reset(board: board);
-    } on Exception {
-      return _reset();
-    }
+    final board = boardId != null
+        ? toBoard(boardId: boardId)
+        : toBoard(boardId: BoardId.defaultId).goalShuffled.robotShuffled;
+    return init(board: board);
   }
 
   /// Reset state and returns new state.
-  static GameState _reset({Board? board, GameMode? mode}) {
+  @visibleForTesting
+  static GameState init({required Board board}) {
     return GameState(
-      mode: mode ?? GameMode.play,
-      board: board ?? Board.init(grids: BoardBuilder.defaultGrids),
-      histories: List.empty(growable: true),
+      mode: GameMode.play,
+      board: board,
+      histories: [],
       focusedRobot: const Robot(color: RobotColors.red),
     );
   }
@@ -86,11 +80,8 @@ class GameState with _$GameState {
     );
   }
 
-  GameState onRestart() => shuffleRobots.shuffleGoal.initialized;
-
-  GameState get shuffleRobots => copyWith(board: board.robotShuffled);
-
-  GameState get shuffleGoal => copyWith(board: board.goalShuffled);
+  GameState onRestart() =>
+      copyWith(board: board.robotShuffled.goalShuffled).initialized;
 
   GameState get initialized => copyWith(
         mode: GameMode.play,
