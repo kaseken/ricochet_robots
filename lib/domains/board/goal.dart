@@ -33,10 +33,8 @@ class Goal {
     this.color,
     this.type,
   });
-}
 
-class GoalBuilder {
-  static Goal build() {
+  static Goal get random {
     final n = Random().nextInt(17);
     if (n == 0) {
       return const Goal();

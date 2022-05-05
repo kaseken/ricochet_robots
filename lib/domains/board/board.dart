@@ -29,7 +29,7 @@ class Board with _$Board {
   }) {
     return Board(
       grids: grids,
-      goal: goal ?? GoalBuilder.build(),
+      goal: goal ?? Goal.random,
       robotPositions: robotPositions ?? initRobotPositions(grids: grids),
     );
   }
