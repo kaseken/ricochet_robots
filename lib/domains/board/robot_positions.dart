@@ -16,7 +16,7 @@ class RobotPositions with _$RobotPositions {
     required Position yellow,
   }) = _RobotPositions;
 
-  static RobotPositions init({required Grids grids}) {
+  static RobotPositions random({required Grids grids}) {
     final red = Position.random(grids: grids, used: {});
     final blue = Position.random(grids: grids, used: {red});
     final green = Position.random(grids: grids, used: {red, blue});

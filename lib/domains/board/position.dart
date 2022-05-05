@@ -15,7 +15,7 @@ enum Directions {
 
 @freezed
 class Position with _$Position {
-  static final r = Random();
+  static final _random = Random();
 
   const factory Position({
     required int x,
@@ -28,7 +28,7 @@ class Position with _$Position {
     required Grids grids,
     required Set<Position> used,
   }) {
-    final position = Position(x: r.nextInt(16), y: r.nextInt(16));
+    final position = Position(x: _random.nextInt(16), y: _random.nextInt(16));
     if (grids.canPlaceRobotTo(position: position) && !used.contains(position)) {
       return position;
     }
@@ -38,15 +38,13 @@ class Position with _$Position {
   Position next(Directions directions) {
     switch (directions) {
       case Directions.up:
-        return Position(x: x, y: y - 1);
+        return copyWith(y: y - 1);
       case Directions.right:
-        return Position(x: x + 1, y: y);
+        return copyWith(x: x + 1);
       case Directions.down:
-        return Position(x: x, y: y + 1);
+        return copyWith(y: y + 1);
       case Directions.left:
-        return Position(x: x - 1, y: y);
-      default:
-        return this;
+        return copyWith(x: x - 1);
     }
   }
 }

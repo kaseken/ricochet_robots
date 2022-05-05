@@ -26,7 +26,7 @@ class Board with _$Board {
     return Board(
       grids: grids,
       goal: goal ?? Goal.random,
-      robotPositions: robotPositions ?? RobotPositions.init(grids: grids),
+      robotPositions: robotPositions ?? RobotPositions.random(grids: grids),
     );
   }
 
@@ -76,5 +76,6 @@ class Board with _$Board {
     return null;
   }
 
-  Robot? getRobotIfExists({required Position position} ) => robotPositions.getRobotIfExists(position: position);
+  Robot? getRobotIfExists({required Position position}) =>
+      robotPositions.getRobotIfExists(position: position);
 }
