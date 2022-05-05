@@ -24,22 +24,20 @@ class GameState with _$GameState {
   bool get shouldShowResult => mode == GameMode.showResult;
 
   static GameState initialize({required BoardId? boardId}) {
-    if (boardId == null) {
-      return init();
-    }
-    try {
-      return init(board: toBoard(boardId: boardId));
-    } on Exception {
-      return init();
-    }
+    final board = boardId != null
+        ? toBoard(boardId: boardId)
+        : toBoard(boardId: BoardId.defaultId).goalShuffled.robotShuffled;
+    return init(
+      board: board,
+    );
   }
 
   /// Reset state and returns new state.
   @visibleForTesting
-  static GameState init({Board? board}) {
+  static GameState init({required Board board}) {
     return GameState(
       mode: GameMode.play,
-      board: board ?? Board.init(grids: BoardBuilder.defaultGrids),
+      board: board,
       histories: [],
       focusedRobot: const Robot(color: RobotColors.red),
     );

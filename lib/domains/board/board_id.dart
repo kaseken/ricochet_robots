@@ -8,6 +8,9 @@ import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:tuple/tuple.dart';
 
 class BoardId {
+  static const _defaultEncodedId =
+      'r6WKXKXIqKNX-m-----m-nN----Vv--Zv---B-X---B----L-----3------_-QZrZf-_X-Yv_R--LLg1----n---507---Zun---G---Vl_-j--N---Wj--X----ZfYr--X--_--LR-_-N--m---n-m-------ZeXKXAXKVeXBtHulzQjpaWoGi4zV16tKSmcPyZMQM';
+
   final String baseId;
   final String normalGoalId;
   final String wildGoalId;
@@ -52,12 +55,12 @@ class BoardId {
       _robotIdLength +
       _goalIdLength;
 
-  static BoardId? tryParse({required String rawId}) {
-    final is64based = rawId.split('').every((c) => base64Set.contains(c));
+  static BoardId? tryParse({required String encoded}) {
+    final is64based = encoded.split('').every((c) => base64Set.contains(c));
     if (!is64based) {
       return null;
     }
-    final id = to16based(from: rawId);
+    final id = to16based(from: encoded);
     if (id.length != _idLength) {
       return null;
     }
@@ -70,6 +73,14 @@ class BoardId {
       robotId: id.substring(_robotIdStart, _robotIdStart + _robotIdLength),
       goalId: id.substring(_goalIdStart, _goalIdStart + _goalIdLength),
     );
+  }
+
+  static BoardId get defaultId {
+    final id = tryParse(encoded: _defaultEncodedId);
+    if (id == null) {
+      throw Exception('Invalid defaultEncodedId');
+    }
+    return id;
   }
 }
 
