@@ -1,34 +1,20 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
+import 'package:ricochet_robots/domains/board/grids.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/board/robot_positions.dart';
 import 'package:tuple/tuple.dart';
 
-class BoardBuilder {
-  static List<Position> buildInitialPositions(List<List<Grid>> grids) {
-    final List<Position> positions = List.empty(growable: true);
-    final random = Random();
-    while (positions.length < 4) {
-      final x = random.nextInt(16);
-      final y = random.nextInt(16);
-      if (positions.where((p) => p.x == x && p.y == y).isNotEmpty) {
-        continue;
-      }
-      if (grids[y][x].canPlaceRobot) {
-        positions.add(Position(x: x, y: y));
-      }
-    }
-    return positions;
-  }
+import 'grids.dart';
 
-  static List<List<Grid>> get defaultGrids {
-    return [
+class BoardBuilder {
+  static Grids get defaultGrids {
+    final grids = [
       [
         NormalGrid(canMoveUp: false, canMoveLeft: false),
         NormalGrid(canMoveUp: false, canMoveRight: false),
@@ -418,6 +404,7 @@ class BoardBuilder {
         NormalGrid(canMoveRight: false, canMoveDown: false),
       ],
     ];
+    return Grids(grids: grids);
   }
 }
 
@@ -428,16 +415,17 @@ Board toBoard({required BoardId boardId}) => Board(
     );
 
 @visibleForTesting
-List<List<Grid>> toGrids({required BoardId boardId}) {
+Grids toGrids({required BoardId boardId}) {
   final baseGrids = addEdges(grids: toNormalGrids(id: boardId.baseId));
   final gridsWithNormalGoal = putNormalGoals(
     baseGrids: baseGrids,
     normalGoalId: boardId.normalGoalId,
   );
-  return putWildGoalGrid(
+  final grids = putWildGoalGrid(
     grids: gridsWithNormalGoal,
     wildGoalId: boardId.wildGoalId,
   );
+  return Grids(grids: grids);
 }
 
 const canMoveUpBit = 1 << 0;
@@ -591,14 +579,15 @@ List<List<Grid>> putWildGoalGrid({
 }
 
 RobotPositions toRobotPositions({required BoardId boardId}) {
-  return Map.fromEntries(
-    List.generate(
-      RobotColors.values.length,
-      (i) => MapEntry(
-        RobotColors.values[i],
-        getPosition(id: boardId.robotId.substring(i * 2, i * 2 + 2)),
-      ),
-    ),
+  final positions = List.generate(
+    RobotColors.values.length,
+    (i) => getPosition(id: boardId.robotId.substring(i * 2, i * 2 + 2)),
+  );
+  return RobotPositions(
+    red: positions[0],
+    blue: positions[1],
+    green: positions[2],
+    yellow: positions[3],
   );
 }
 

@@ -51,22 +51,17 @@ class GameState with _$GameState {
       copyWith(focusedRobot: Robot(color: color));
 
   GameState onDirectionSelected({required Directions direction}) {
-    final currentPosition = board.robotPositions[focusedRobot.color];
-    if (currentPosition == null) {
-      return this;
-    }
+    final currentPosition =
+        board.robotPositions.position(color: focusedRobot.color);
     final nextBoard = board.moved(focusedRobot, direction);
-    final nextPosition = nextBoard.robotPositions[focusedRobot.color];
-    if (nextPosition == null) {
-      return copyWith(board: nextBoard);
-    }
+    final nextPosition =
+        nextBoard.robotPositions.position(color: focusedRobot.color);
     final history = History(
       color: focusedRobot.color,
       position: currentPosition,
     );
-    final nextHistories = !nextPosition.equals(currentPosition)
-        ? [...histories, history]
-        : histories;
+    final nextHistories =
+        nextPosition != currentPosition ? [...histories, history] : histories;
     if (board.isGoal(nextPosition, focusedRobot)) {
       return copyWith(
         mode: GameWidgetMode.showResult,

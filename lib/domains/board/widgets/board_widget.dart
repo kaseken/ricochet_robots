@@ -13,7 +13,9 @@ class BoardWidget extends StatelessWidget {
     required this.board,
   }) : super(key: key);
 
-  Robot? _robot(int x, int y) => board.getRobotIfExists(Position(x: x, y: y));
+  Robot? _robot(int x, int y) => board.getRobotIfExists(
+        position: Position(x: x, y: y),
+      );
 
   Widget _buildRow(List<Grid> row, int y) {
     return Row(
@@ -34,7 +36,7 @@ class BoardWidget extends StatelessWidget {
       child: Column(
         children: List.generate(
           board.grids.length,
-          (y) => _buildRow(board.grids[y], y),
+          (y) => _buildRow(board.grids.row(y: y), y),
         ),
       ),
     );

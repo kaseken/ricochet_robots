@@ -1,3 +1,11 @@
+import 'dart:math';
+
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'grids.dart';
+
+part 'position.freezed.dart';
+
 enum Directions {
   up,
   right,
@@ -5,14 +13,27 @@ enum Directions {
   left,
 }
 
-class Position {
-  final int x;
-  final int y;
+@freezed
+class Position with _$Position {
+  static final r = Random();
 
-  const Position({
-    required this.x,
-    required this.y,
-  });
+  const factory Position({
+    required int x,
+    required int y,
+  }) = _Position;
+
+  const Position._();
+
+  static random({
+    required Grids grids,
+    required Set<Position> used,
+  }) {
+    final position = Position(x: r.nextInt(16), y: r.nextInt(16));
+    if (grids.canPlaceRobotTo(position: position) && !used.contains(position)) {
+      return position;
+    }
+    return random(grids: grids, used: used);
+  }
 
   Position next(Directions directions) {
     switch (directions) {
@@ -27,9 +48,5 @@ class Position {
       default:
         return this;
     }
-  }
-
-  bool equals(Position that) {
-    return x == that.x && y == that.y;
   }
 }
