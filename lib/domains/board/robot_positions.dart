@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/grids.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
@@ -41,6 +42,27 @@ class RobotPositions with _$RobotPositions {
       .where((c) => c != color)
       .map((c) => position(color: c))
       .toSet();
+
+  RobotPositions movedAsPossible({
+    required Board board,
+    required Robot robot,
+    required Directions direction,
+  }) {
+    final current = position(color: robot.color);
+    final otherRobotPositions = others(color: robot.color);
+    if (!board.grids.at(position: current).canMove(direction)) {
+      return this;
+    }
+    final nextPosition = current.next(direction);
+    if (otherRobotPositions.contains(nextPosition)) {
+      return this;
+    }
+    return move(color: robot.color, to: nextPosition).movedAsPossible(
+      board: board,
+      robot: robot,
+      direction: direction,
+    );
+  }
 
   RobotPositions move({required RobotColors color, required Position to}) {
     return RobotPositions(
