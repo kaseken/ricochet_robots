@@ -3,7 +3,7 @@ import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
-import 'package:ricochet_robots/widgets/grid_widget.dart';
+import 'package:ricochet_robots/domains/board/widgets/grid_widget.dart';
 
 class BoardWidget extends StatelessWidget {
   final Board board;
