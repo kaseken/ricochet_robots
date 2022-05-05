@@ -16,8 +16,6 @@ class GameState with _$GameState {
 
   const factory GameState({
     required GameMode mode,
-
-    /// Properties for playing.
     required Board board,
     required List<History> histories,
     required Robot focusedRobot,
@@ -27,22 +25,22 @@ class GameState with _$GameState {
 
   static GameState initialize({required BoardId? boardId}) {
     if (boardId == null) {
-      return _reset();
+      return init();
     }
     try {
-      final board = toBoard(boardId: boardId);
-      return _reset(board: board);
+      return init(board: toBoard(boardId: boardId));
     } on Exception {
-      return _reset();
+      return init();
     }
   }
 
   /// Reset state and returns new state.
-  static GameState _reset({Board? board, GameMode? mode}) {
+  @visibleForTesting
+  static GameState init({Board? board}) {
     return GameState(
-      mode: mode ?? GameMode.play,
+      mode: GameMode.play,
       board: board ?? Board.init(grids: BoardBuilder.defaultGrids),
-      histories: List.empty(growable: true),
+      histories: [],
       focusedRobot: const Robot(color: RobotColors.red),
     );
   }
