@@ -71,14 +71,6 @@ class BoardId {
       goalId: id.substring(_goalIdStart, _goalIdStart + _goalIdLength),
     );
   }
-
-  // static BoardId get defaultId {
-  //   final id = tryParse(encoded: _defaultEncodedId);
-  //   if (id == null) {
-  //     throw Exception('Invalid defaultEncodedId');
-  //   }
-  //   return id;
-  // }
 }
 
 @visibleForTesting
