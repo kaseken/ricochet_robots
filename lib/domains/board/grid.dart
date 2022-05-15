@@ -2,7 +2,11 @@ import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 
-abstract class Grid {
+abstract class Rotatable {
+  Grid get rotateRight;
+}
+
+abstract class Grid implements Rotatable {
   final bool canMoveUp;
   final bool canMoveRight;
   final bool canMoveDown;
@@ -59,6 +63,14 @@ class NormalGrid extends Grid {
           canMoveDown: canMoveDown,
           canMoveLeft: canMoveLeft,
         );
+
+  @override
+  NormalGrid get rotateRight => NormalGrid(
+        canMoveUp: canMoveLeft,
+        canMoveRight: canMoveUp,
+        canMoveDown: canMoveRight,
+        canMoveLeft: canMoveDown,
+      );
 }
 
 abstract class GoalGrid extends Grid {
@@ -80,8 +92,8 @@ class NormalGoalGrid extends GoalGrid {
   final GoalTypes type;
 
   NormalGoalGrid({
-    this.color = RobotColors.red,
-    this.type = GoalTypes.star,
+    required this.color,
+    required this.type,
     bool canMoveUp = true,
     bool canMoveDown = true,
     bool canMoveLeft = true,
@@ -97,6 +109,16 @@ class NormalGoalGrid extends GoalGrid {
   bool isGoal(Goal goal, Robot robot) {
     return goal.color == color && goal.type == type && robot.color == color;
   }
+
+  @override
+  NormalGoalGrid get rotateRight => NormalGoalGrid(
+        color: color,
+        type: type,
+        canMoveUp: canMoveLeft,
+        canMoveRight: canMoveUp,
+        canMoveDown: canMoveRight,
+        canMoveLeft: canMoveDown,
+      );
 }
 
 class WildGoalGrid extends GoalGrid {
@@ -115,4 +137,12 @@ class WildGoalGrid extends GoalGrid {
   @override
   bool isGoal(Goal goal, Robot robot) =>
       goal.color == null && goal.type == null;
+
+  @override
+  WildGoalGrid get rotateRight => WildGoalGrid(
+        canMoveUp: canMoveLeft,
+        canMoveRight: canMoveUp,
+        canMoveDown: canMoveRight,
+        canMoveLeft: canMoveDown,
+      );
 }

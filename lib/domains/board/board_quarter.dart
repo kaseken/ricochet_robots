@@ -11,64 +11,110 @@ class BoardQuarterRed implements BoardQuarter {
   @override
   final GridsQuarter gridsQuarter;
 
-  BoardQuarterRed({
+  const BoardQuarterRed({required this.gridsQuarter});
+
+  static BoardQuarterRed from({
     required Map<Position, Goal> goals,
     required Set<WallPosition> verticalWalls,
     required Set<WallPosition> horizontalWalls,
-  }) : gridsQuarter = GridsQuarter(
-          goals: goals,
-          verticalWalls: verticalWalls,
-          horizontalWalls: horizontalWalls,
-        );
+  }) {
+    return BoardQuarterRed(
+      gridsQuarter: GridsQuarter.from(
+        goals: goals,
+        verticalWalls: verticalWalls,
+        horizontalWalls: horizontalWalls,
+      ),
+    );
+  }
+
+  @override
+  BoardQuarterRed get rotateRight => BoardQuarterRed(
+        gridsQuarter: gridsQuarter.rotateRight,
+      );
 }
 
 class BoardQuarterBlue implements BoardQuarter {
   @override
   final GridsQuarter gridsQuarter;
 
-  BoardQuarterBlue({
+  const BoardQuarterBlue({required this.gridsQuarter});
+
+  static BoardQuarterBlue from({
     required Map<Position, Goal> goals,
     required Set<WallPosition> verticalWalls,
     required Set<WallPosition> horizontalWalls,
-  }) : gridsQuarter = GridsQuarter(
-          goals: goals,
-          verticalWalls: verticalWalls,
-          horizontalWalls: horizontalWalls,
-        );
+  }) {
+    return BoardQuarterBlue(
+      gridsQuarter: GridsQuarter.from(
+        goals: goals,
+        verticalWalls: verticalWalls,
+        horizontalWalls: horizontalWalls,
+      ),
+    );
+  }
+
+  @override
+  BoardQuarterBlue get rotateRight => BoardQuarterBlue(
+        gridsQuarter: gridsQuarter.rotateRight,
+      );
 }
 
 class BoardQuarterGreen implements BoardQuarter {
   @override
   final GridsQuarter gridsQuarter;
 
-  BoardQuarterGreen({
+  const BoardQuarterGreen({required this.gridsQuarter});
+
+  static BoardQuarterGreen from({
     required Map<Position, Goal> goals,
     required Set<WallPosition> verticalWalls,
     required Set<WallPosition> horizontalWalls,
-  }) : gridsQuarter = GridsQuarter(
-          goals: goals,
-          verticalWalls: verticalWalls,
-          horizontalWalls: horizontalWalls,
-        );
+  }) {
+    return BoardQuarterGreen(
+      gridsQuarter: GridsQuarter.from(
+        goals: goals,
+        verticalWalls: verticalWalls,
+        horizontalWalls: horizontalWalls,
+      ),
+    );
+  }
+
+  @override
+  BoardQuarterGreen get rotateRight => BoardQuarterGreen(
+        gridsQuarter: gridsQuarter.rotateRight,
+      );
 }
 
 class BoardQuarterYellow implements BoardQuarter {
   @override
   final GridsQuarter gridsQuarter;
 
-  BoardQuarterYellow({
+  const BoardQuarterYellow({required this.gridsQuarter});
+
+  static BoardQuarterYellow from({
     required Map<Position, Goal> goals,
     required Set<WallPosition> verticalWalls,
     required Set<WallPosition> horizontalWalls,
-  }) : gridsQuarter = GridsQuarter(
-          goals: goals,
-          verticalWalls: verticalWalls,
-          horizontalWalls: horizontalWalls,
-        );
+  }) {
+    return BoardQuarterYellow(
+      gridsQuarter: GridsQuarter.from(
+        goals: goals,
+        verticalWalls: verticalWalls,
+        horizontalWalls: horizontalWalls,
+      ),
+    );
+  }
+
+  @override
+  BoardQuarterYellow get rotateRight => BoardQuarterYellow(
+        gridsQuarter: gridsQuarter.rotateRight,
+      );
 }
 
 abstract class BoardQuarter {
   GridsQuarter get gridsQuarter;
+
+  BoardQuarter get rotateRight;
 }
 
 @freezed
@@ -85,17 +131,23 @@ class GridsQuarter {
 
   final List<List<Grid>> grids;
 
-  GridsQuarter({
+  const GridsQuarter({required this.grids});
+
+  static GridsQuarter from({
     required Map<Position, Goal> goals,
     required Set<WallPosition> verticalWalls,
     required Set<WallPosition> horizontalWalls,
-  }) : grids = init(
-          goals: goals,
-          verticalWalls: verticalWalls,
-          horizontalWalls: horizontalWalls,
-        );
+  }) {
+    return GridsQuarter(
+      grids: initGrids(
+        goals: goals,
+        verticalWalls: verticalWalls,
+        horizontalWalls: horizontalWalls,
+      ),
+    );
+  }
 
-  static List<List<Grid>> init({
+  static List<List<Grid>> initGrids({
     required Map<Position, Goal> goals,
     required Set<WallPosition> verticalWalls,
     required Set<WallPosition> horizontalWalls,
@@ -139,5 +191,15 @@ class GridsQuarter {
         );
       });
     });
+  }
+
+  GridsQuarter get rotateRight {
+    return GridsQuarter(
+      grids: List.generate(_horizontalLength, (x) {
+        return List.generate(_verticalLength, (y) {
+          return grids[(_verticalLength - 1) - y][x].rotateRight;
+        });
+      }),
+    );
   }
 }
