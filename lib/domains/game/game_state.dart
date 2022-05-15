@@ -24,9 +24,7 @@ class GameState with _$GameState {
   bool get shouldShowResult => mode == GameMode.showResult;
 
   static GameState initialize({required BoardId? boardId}) {
-    final board = boardId != null
-        ? toBoard(boardId: boardId)
-        : toBoard(boardId: BoardId.defaultId).goalShuffled.robotShuffled;
+    final board = boardId != null ? toBoard(boardId: boardId) : Board.random;
     return init(board: board);
   }
 
