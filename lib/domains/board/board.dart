@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ricochet_robots/domains/board/board_quarter.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/grids.dart';
@@ -27,6 +28,37 @@ class Board with _$Board {
       grids: grids,
       goal: goal ?? Goal.random,
       robotPositions: robotPositions ?? RobotPositions.random(grids: grids),
+    );
+  }
+
+  static Board synthesize({
+    required BoardQuarterRed boardQuarterRed,
+    required BoardQuarterBlue boardQuarterBlue,
+    required BoardQuarterGreen boardQuarterGreen,
+    required BoardQuarterYellow boardQuarterYellow,
+  }) {
+    final boardQuarters = [
+      boardQuarterRed,
+      boardQuarterBlue,
+      boardQuarterGreen,
+      boardQuarterYellow
+    ]..shuffle();
+
+    /// TODO: refactoring
+    final topLeftGrids = boardQuarters[0].gridsQuarter.grids;
+    final topRightGrids = boardQuarters[1].rotateRight.gridsQuarter.grids;
+    final bottomRightGrids =
+        boardQuarters[2].rotateRight.rotateRight.gridsQuarter.grids;
+    final bottomLeftGrids =
+        boardQuarters[3].rotateRight.rotateRight.rotateRight.gridsQuarter.grids;
+    final leftHalfGrids = topLeftGrids + bottomLeftGrids;
+    final rightHalfGrids = topRightGrids + bottomRightGrids;
+    return init(
+      grids: Grids(
+        grids: List.generate(leftHalfGrids.length, (y) {
+          return leftHalfGrids[y] + rightHalfGrids[y];
+        }),
+      ),
     );
   }
 
