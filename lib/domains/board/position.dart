@@ -13,6 +13,9 @@ enum Directions {
   left,
 }
 
+Directions opposite({required Directions direction}) =>
+    Directions.values[(direction.index + 2) % 4];
+
 @freezed
 class Position with _$Position {
   static final _random = Random();

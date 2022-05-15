@@ -54,7 +54,10 @@ class RobotPositions with _$RobotPositions {
       return this;
     }
     final nextPosition = current.next(direction);
-    if (otherRobotPositions.contains(nextPosition)) {
+    final canMoveOpposite = board.grids
+        .at(position: nextPosition)
+        .canMove(opposite(direction: direction));
+    if (otherRobotPositions.contains(nextPosition) || !canMoveOpposite) {
       return this;
     }
     return move(color: robot.color, to: nextPosition).movedAsPossible(
