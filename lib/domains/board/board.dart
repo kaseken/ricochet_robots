@@ -1,11 +1,16 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ricochet_robots/domains/board/board_quarter.dart';
+import 'package:ricochet_robots/domains/board/defaultBoards/green/boards.dart';
+import 'package:ricochet_robots/domains/board/defaultBoards/red/boards.dart';
+import 'package:ricochet_robots/domains/board/defaultBoards/yellow/boards.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/grids.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 import 'package:ricochet_robots/domains/board/robot_positions.dart';
+
+import 'defaultBoards/blue/boards.dart';
 
 part 'board.freezed.dart';
 
@@ -28,6 +33,15 @@ class Board with _$Board {
       grids: grids,
       goal: goal ?? Goal.random,
       robotPositions: robotPositions ?? RobotPositions.random(grids: grids),
+    );
+  }
+
+  static Board get random {
+    return synthesize(
+      boardQuarterRed: randomRedBoard(),
+      boardQuarterBlue: randomBlueBoard(),
+      boardQuarterGreen: randomGreenBoard(),
+      boardQuarterYellow: randomYellowBoard(),
     );
   }
 

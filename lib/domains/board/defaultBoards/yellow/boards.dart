@@ -1,9 +1,15 @@
+import 'dart:math';
+
 import 'package:ricochet_robots/domains/board/board_quarter.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
 
-final defaultYellowAlpha = BoardQuarterYellow.from(
+BoardQuarterYellow randomYellowBoard() => [
+      _defaultYellowAlpha,
+    ][Random().nextInt(1)];
+
+final _defaultYellowAlpha = BoardQuarterYellow.from(
   goals: {
     const Position(x: 5, y: 1): const Goal(
       color: RobotColors.blue,
