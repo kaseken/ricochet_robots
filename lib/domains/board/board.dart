@@ -31,13 +31,35 @@ class Board with _$Board {
     );
   }
 
-  static Board from({
+  static Board synthesize({
     required BoardQuarterRed boardQuarterRed,
     required BoardQuarterBlue boardQuarterBlue,
     required BoardQuarterGreen boardQuarterGreen,
     required BoardQuarterYellow boardQuarterYellow,
   }) {
-    throw UnimplementedError();
+    final boardQuarters = [
+      boardQuarterRed,
+      boardQuarterBlue,
+      boardQuarterGreen,
+      boardQuarterYellow
+    ]..shuffle();
+
+    /// TODO: refactoring
+    final topLeftGrids = boardQuarters[0].gridsQuarter.grids;
+    final topRightGrids = boardQuarters[1].rotateRight.gridsQuarter.grids;
+    final bottomRightGrids =
+        boardQuarters[2].rotateRight.rotateRight.gridsQuarter.grids;
+    final bottomLeftGrids =
+        boardQuarters[3].rotateRight.rotateRight.rotateRight.gridsQuarter.grids;
+    final leftHalfGrids = topLeftGrids + bottomLeftGrids;
+    final rightHalfGrids = topRightGrids + bottomRightGrids;
+    return init(
+      grids: Grids(
+        grids: List.generate(leftHalfGrids.length, (y) {
+          return leftHalfGrids[y] + rightHalfGrids[y];
+        }),
+      ),
+    );
   }
 
   Board moved(Robot robot, Directions direction) {
