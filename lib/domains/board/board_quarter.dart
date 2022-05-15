@@ -9,34 +9,66 @@ enum BoardQuarterType { red, blue, green, yellow }
 
 class BoardQuarterRed implements BoardQuarter {
   @override
-  final GridsQuarter grids;
+  final GridsQuarter gridsQuarter;
 
-  const BoardQuarterRed({required this.grids});
+  BoardQuarterRed({
+    required Map<Position, Goal> goals,
+    required Set<WallPosition> verticalWalls,
+    required Set<WallPosition> horizontalWalls,
+  }) : gridsQuarter = GridsQuarter(
+          goals: goals,
+          verticalWalls: verticalWalls,
+          horizontalWalls: horizontalWalls,
+        );
 }
 
 class BoardQuarterBlue implements BoardQuarter {
   @override
-  final GridsQuarter grids;
+  final GridsQuarter gridsQuarter;
 
-  const BoardQuarterBlue({required this.grids});
+  BoardQuarterBlue({
+    required Map<Position, Goal> goals,
+    required Set<WallPosition> verticalWalls,
+    required Set<WallPosition> horizontalWalls,
+  }) : gridsQuarter = GridsQuarter(
+          goals: goals,
+          verticalWalls: verticalWalls,
+          horizontalWalls: horizontalWalls,
+        );
 }
 
 class BoardQuarterGreen implements BoardQuarter {
   @override
-  final GridsQuarter grids;
+  final GridsQuarter gridsQuarter;
 
-  const BoardQuarterGreen({required this.grids});
+  BoardQuarterGreen({
+    required Map<Position, Goal> goals,
+    required Set<WallPosition> verticalWalls,
+    required Set<WallPosition> horizontalWalls,
+  }) : gridsQuarter = GridsQuarter(
+          goals: goals,
+          verticalWalls: verticalWalls,
+          horizontalWalls: horizontalWalls,
+        );
 }
 
 class BoardQuarterYellow implements BoardQuarter {
   @override
-  final GridsQuarter grids;
+  final GridsQuarter gridsQuarter;
 
-  const BoardQuarterYellow({required this.grids});
+  BoardQuarterYellow({
+    required Map<Position, Goal> goals,
+    required Set<WallPosition> verticalWalls,
+    required Set<WallPosition> horizontalWalls,
+  }) : gridsQuarter = GridsQuarter(
+          goals: goals,
+          verticalWalls: verticalWalls,
+          horizontalWalls: horizontalWalls,
+        );
 }
 
 abstract class BoardQuarter {
-  GridsQuarter get grids;
+  GridsQuarter get gridsQuarter;
 }
 
 @freezed
