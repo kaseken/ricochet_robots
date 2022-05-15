@@ -78,8 +78,7 @@ class GameState with _$GameState {
     );
   }
 
-  GameState onRestart() =>
-      copyWith(board: board.robotShuffled.goalShuffled).initialized;
+  GameState onRestart() => copyWith(board: Board.random).initialized;
 
   GameState get initialized => copyWith(
         mode: GameMode.play,
