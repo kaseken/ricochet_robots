@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ricochet_robots/domains/board/board_quarter.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/grid.dart';
 import 'package:ricochet_robots/domains/board/grids.dart';
@@ -28,6 +29,15 @@ class Board with _$Board {
       goal: goal ?? Goal.random,
       robotPositions: robotPositions ?? RobotPositions.random(grids: grids),
     );
+  }
+
+  static Board from({
+    required BoardQuarterRed boardQuarterRed,
+    required BoardQuarterBlue boardQuarterBlue,
+    required BoardQuarterGreen boardQuarterGreen,
+    required BoardQuarterYellow boardQuarterYellow,
+  }) {
+    throw UnimplementedError();
   }
 
   Board moved(Robot robot, Directions direction) {
