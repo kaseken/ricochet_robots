@@ -23,6 +23,7 @@ class BoardWidget extends StatelessWidget {
         row.length,
         (x) => GridWidget(
           grid: row[x],
+          position: Position(x: x, y: y),
           robot: _robot(x, y),
         ),
       ),

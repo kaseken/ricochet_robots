@@ -5,6 +5,8 @@ import 'package:ricochet_robots/domains/board/board.dart';
 import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/goal.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/edit/edit.dart';
+import 'package:ricochet_robots/domains/edit/editable_icon.dart';
 import 'package:ricochet_robots/domains/game/game_bloc.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
 import 'package:ricochet_robots/domains/game/history.dart';
@@ -29,7 +31,7 @@ class HeaderWidget extends StatelessWidget {
     fontSize: 20,
   );
 
-  Widget _target(Goal goal) {
+  Widget _target(Goal goal, BuildContext context) {
     final color = goal.color;
     if (color == null) {
       return Text(
@@ -44,15 +46,17 @@ class HeaderWidget extends StatelessWidget {
         color: getActualColor(color),
         borderRadius: BorderRadius.circular(4.0),
       ),
-      child: const Icon(
-        Icons.android_outlined,
+      child: EditableIcon(
+        iconData: Icons.android_outlined,
         color: Colors.white,
         size: 20,
+        editAction: const EditAction(nextGoalColor: true),
+        currentMode: currentMode,
       ),
     );
   }
 
-  Widget _goal(Goal goal) {
+  Widget _goal(Goal goal, BuildContext context) {
     final type = goal.type;
     final color = goal.color;
     if (type == null || color == null) {
@@ -62,10 +66,12 @@ class HeaderWidget extends StatelessWidget {
         color: Colors.deepPurple,
       );
     }
-    return Icon(
-      getIcon(type),
-      size: 20,
+    return EditableIcon(
+      iconData: getIcon(type),
       color: getActualColor(color),
+      size: 20,
+      editAction: const EditAction(nextGoalType: true),
+      currentMode: currentMode,
     );
   }
 
@@ -78,6 +84,7 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final toEditMode = currentMode != GameMode.edit;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -85,9 +92,9 @@ class HeaderWidget extends StatelessWidget {
           Row(
             children: [
               Text("Move ", style: _textStyle),
-              _target(board.goal),
+              _target(board.goal, context),
               Text(" to ", style: _textStyle),
-              _goal(board.goal),
+              _goal(board.goal, context),
             ],
           ),
           const Expanded(child: SizedBox.shrink()),
@@ -109,6 +116,19 @@ class HeaderWidget extends StatelessWidget {
               size: _iconSize,
             ),
           ),
+          IconButton(
+            onPressed: () => context
+                .read<GameBloc>()
+                .add(EditModeEvent(toEditMode: toEditMode)),
+            icon: Icon(
+              toEditMode ? Icons.edit : Icons.stop,
+              color: Colors.grey,
+              size: _iconSize,
+            ),
+          ),
+          toEditMode
+              ? const SizedBox.shrink()
+              : Text("Edit Mode", style: _textStyle),
         ],
       ),
     );

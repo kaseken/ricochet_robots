@@ -7,12 +7,12 @@ abstract class Rotatable {
 }
 
 abstract class Grid implements Rotatable {
-  final bool canMoveUp;
-  final bool canMoveRight;
-  final bool canMoveDown;
-  final bool canMoveLeft;
+  bool canMoveUp;
+  bool canMoveRight;
+  bool canMoveDown;
+  bool canMoveLeft;
 
-  const Grid({
+  Grid({
     this.canMoveUp = false,
     this.canMoveRight = false,
     this.canMoveDown = false,
@@ -74,7 +74,7 @@ class NormalGrid extends Grid {
 }
 
 abstract class GoalGrid extends Grid {
-  const GoalGrid({
+  GoalGrid({
     required bool canMoveUp,
     required bool canMoveDown,
     required bool canMoveLeft,

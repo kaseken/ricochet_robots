@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/edit/edit.dart';
 import 'package:ricochet_robots/domains/game/game_state.dart';
 
 import '../board/position.dart';
@@ -17,6 +18,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     );
     on<RedoEvent>((event, emit) => emit(state.onRedoPressed()));
     on<RestartEvent>((event, emit) => emit(state.onRestart()));
+    on<EditModeEvent>((event, emit) =>
+        emit(state.onEditModeEvent(toEditMode: event.toEditMode)));
+    on<EditBoardEvent>((event, emit) =>
+        emit(state.onEditBoardEvent(editAction: event.editAction)));
   }
 }
 
@@ -42,4 +47,16 @@ class RedoEvent extends GameEvent {
 
 class RestartEvent extends GameEvent {
   const RestartEvent();
+}
+
+class EditModeEvent extends GameEvent {
+  final bool toEditMode;
+
+  const EditModeEvent({required this.toEditMode});
+}
+
+class EditBoardEvent extends GameEvent {
+  final EditAction editAction;
+
+  const EditBoardEvent({required this.editAction});
 }
