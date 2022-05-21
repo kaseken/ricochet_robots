@@ -11,62 +11,89 @@ class Grids {
 
   Grid at({required Position position}) => grids[position.y][position.x];
 
+  Grid? _safeAt({required Position position}) {
+    if (position.y < 0 || position.y >= grids.length) {
+      return null;
+    }
+    if (position.x < 0 || position.x >= grids[position.y].length) {
+      return null;
+    }
+    return at(position: position);
+  }
+
   int get length => grids.length;
 
   List<Grid> row({required int y}) => grids[y];
 
-  Grids swapGoal(Position a, Position b) {
-    final newGrids = [...grids];
-    final gridA = newGrids[a.y][a.x];
-    final gridACanMoveUp = gridA.canMoveUp;
-    final gridACanMoveRight = gridA.canMoveRight;
-    final gridACanMoveDown = gridA.canMoveDown;
-    final gridACanMoveLeft = gridA.canMoveLeft;
-    final gridB = newGrids[b.y][b.x];
-    final gridBCanMoveUp = gridB.canMoveUp;
-    final gridBCanMoveRight = gridB.canMoveRight;
-    final gridBCanMoveDown = gridB.canMoveDown;
-    final gridBCanMoveLeft = gridB.canMoveLeft;
-    newGrids[a.y][a.x] = gridB;
-    newGrids[a.y][a.x].canMoveUp = gridACanMoveUp;
-    newGrids[a.y][a.x].canMoveRight = gridACanMoveRight;
-    newGrids[a.y][a.x].canMoveDown = gridACanMoveDown;
-    newGrids[a.y][a.x].canMoveLeft = gridACanMoveLeft;
-    newGrids[b.y][b.x] = gridA;
-    newGrids[b.y][b.x].canMoveUp = gridBCanMoveUp;
-    newGrids[b.y][b.x].canMoveRight = gridBCanMoveRight;
-    newGrids[b.y][b.x].canMoveDown = gridBCanMoveDown;
-    newGrids[b.y][b.x].canMoveLeft = gridBCanMoveLeft;
+  Grids swap(Position a, Position b) {
+    final newGrids = List.generate(grids.length, (y) {
+      return List.generate(grids[y].length, (x) {
+        final position = Position(x: x, y: y);
+        if (position == a) {
+          return at(position: b);
+        }
+        if (position == b) {
+          return at(position: a);
+        }
+        return at(position: position);
+      });
+    });
     return Grids(grids: newGrids);
   }
 
-  Grids toggleCanMoveUp(Position a) {
-    final newGrids = [...grids];
-    if (!(1 <= a.y &&
-        a.y < newGrids.length &&
-        0 <= a.x &&
-        a.x < newGrids[a.y].length)) {
-      return Grids(grids: newGrids);
+  Grids toggleCanMoveUp(Position lowerPosition) {
+    final upperPosition = Position(x: lowerPosition.x, y: lowerPosition.y - 1);
+    final upperGrid = _safeAt(position: upperPosition);
+    final lowerGrid = _safeAt(position: lowerPosition);
+    if (upperGrid == null || lowerGrid == null) {
+      return this;
     }
-    final grid = newGrids[a.y][a.x];
-    final newCanMoveUp = !grid.canMoveUp;
-    newGrids[a.y][a.x].canMoveUp = newCanMoveUp;
-    newGrids[a.y - 1][a.x].canMoveDown = newCanMoveUp;
+    final newGrids = List.generate(grids.length, (y) {
+      return List.generate(grids[y].length, (x) {
+        final position = Position(x: x, y: y);
+        if (position == upperPosition) {
+          return upperGrid.setCanMove(
+            directions: Directions.down,
+            canMove: !lowerGrid.canMoveUp,
+          );
+        }
+        if (position == lowerPosition) {
+          return lowerGrid.setCanMove(
+            directions: Directions.up,
+            canMove: !lowerGrid.canMoveUp,
+          );
+        }
+        return at(position: position);
+      });
+    });
     return Grids(grids: newGrids);
   }
 
-  Grids toggleCanMoveLeft(Position a) {
-    final newGrids = [...grids];
-    if (!(0 <= a.y &&
-        a.y < newGrids.length &&
-        1 <= a.x &&
-        a.x < newGrids[a.y].length)) {
-      return Grids(grids: newGrids);
+  Grids toggleCanMoveLeft(Position rightPosition) {
+    final leftPosition = Position(x: rightPosition.x - 1, y: rightPosition.y);
+    final rightGrid = _safeAt(position: rightPosition);
+    final leftGrid = _safeAt(position: leftPosition);
+    if (rightGrid == null || leftGrid == null) {
+      return this;
     }
-    final grid = newGrids[a.y][a.x];
-    final newCanMoveLeft = !grid.canMoveLeft;
-    newGrids[a.y][a.x].canMoveLeft = newCanMoveLeft;
-    newGrids[a.y][a.x - 1].canMoveRight = newCanMoveLeft;
+    final newGrids = List.generate(grids.length, (y) {
+      return List.generate(grids[y].length, (x) {
+        final position = Position(x: x, y: y);
+        if (position == rightPosition) {
+          return rightGrid.setCanMove(
+            directions: Directions.left,
+            canMove: !rightGrid.canMoveLeft,
+          );
+        }
+        if (position == leftPosition) {
+          return leftGrid.setCanMove(
+            directions: Directions.right,
+            canMove: !rightGrid.canMoveLeft,
+          );
+        }
+        return at(position: position);
+      });
+    });
     return Grids(grids: newGrids);
   }
 }

@@ -7,12 +7,12 @@ abstract class Rotatable {
 }
 
 abstract class Grid implements Rotatable {
-  bool canMoveUp;
-  bool canMoveRight;
-  bool canMoveDown;
-  bool canMoveLeft;
+  final bool canMoveUp;
+  final bool canMoveRight;
+  final bool canMoveDown;
+  final bool canMoveLeft;
 
-  Grid({
+  const Grid({
     this.canMoveUp = false,
     this.canMoveRight = false,
     this.canMoveDown = false,
@@ -49,10 +49,15 @@ abstract class Grid implements Rotatable {
         !canMoveDown &&
         !canMoveLeft;
   }
+
+  Grid setCanMove({
+    required Directions directions,
+    required bool canMove,
+  });
 }
 
 class NormalGrid extends Grid {
-  NormalGrid({
+  const NormalGrid({
     bool canMoveUp = true,
     bool canMoveDown = true,
     bool canMoveLeft = true,
@@ -71,10 +76,23 @@ class NormalGrid extends Grid {
         canMoveDown: canMoveRight,
         canMoveLeft: canMoveDown,
       );
+
+  @override
+  NormalGrid setCanMove({
+    required Directions directions,
+    required bool canMove,
+  }) {
+    return NormalGrid(
+      canMoveUp: directions == Directions.up ? canMove : canMoveUp,
+      canMoveRight: directions == Directions.right ? canMove : canMoveRight,
+      canMoveDown: directions == Directions.down ? canMove : canMoveDown,
+      canMoveLeft: directions == Directions.left ? canMove : canMoveLeft,
+    );
+  }
 }
 
 abstract class GoalGrid extends Grid {
-  GoalGrid({
+  const GoalGrid({
     required bool canMoveUp,
     required bool canMoveDown,
     required bool canMoveLeft,
@@ -91,7 +109,7 @@ class NormalGoalGrid extends GoalGrid {
   final RobotColors color;
   final GoalTypes type;
 
-  NormalGoalGrid({
+  const NormalGoalGrid({
     required this.color,
     required this.type,
     bool canMoveUp = true,
@@ -119,10 +137,25 @@ class NormalGoalGrid extends GoalGrid {
         canMoveDown: canMoveRight,
         canMoveLeft: canMoveDown,
       );
+
+  @override
+  NormalGoalGrid setCanMove({
+    required Directions directions,
+    required bool canMove,
+  }) {
+    return NormalGoalGrid(
+      color: color,
+      type: type,
+      canMoveUp: directions == Directions.up ? canMove : canMoveUp,
+      canMoveRight: directions == Directions.right ? canMove : canMoveRight,
+      canMoveDown: directions == Directions.down ? canMove : canMoveDown,
+      canMoveLeft: directions == Directions.left ? canMove : canMoveLeft,
+    );
+  }
 }
 
 class WildGoalGrid extends GoalGrid {
-  WildGoalGrid({
+  const WildGoalGrid({
     bool canMoveUp = true,
     bool canMoveDown = true,
     bool canMoveLeft = true,
@@ -145,4 +178,17 @@ class WildGoalGrid extends GoalGrid {
         canMoveDown: canMoveRight,
         canMoveLeft: canMoveDown,
       );
+
+  @override
+  WildGoalGrid setCanMove({
+    required Directions directions,
+    required bool canMove,
+  }) {
+    return WildGoalGrid(
+      canMoveUp: directions == Directions.up ? canMove : canMoveUp,
+      canMoveRight: directions == Directions.right ? canMove : canMoveRight,
+      canMoveDown: directions == Directions.down ? canMove : canMoveDown,
+      canMoveLeft: directions == Directions.left ? canMove : canMoveLeft,
+    );
+  }
 }

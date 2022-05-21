@@ -32,7 +32,7 @@ class EditFunction {
     }
     if (prePosition != null && action.position != null) {
       newBoard = newBoard.copyWith(
-        grids: newBoard.grids.swapGoal(prePosition, action.position!),
+        grids: newBoard.grids.swap(prePosition, action.position!),
         robotPositions:
             newBoard.robotPositions.swap(prePosition, action.position!),
       );
