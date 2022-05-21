@@ -76,6 +76,15 @@ class RobotPositions with _$RobotPositions {
     );
   }
 
+  RobotPositions swap(Position a, Position b) {
+    return copyWith(
+      red: red == a ? b : (red == b ? a : red),
+      blue: blue == a ? b : (blue == b ? a : blue),
+      green: green == a ? b : (green == b ? a : green),
+      yellow: yellow == a ? b : (yellow == b ? a : yellow),
+    );
+  }
+
   Robot? getRobotIfExists({required Position position}) {
     if (position == red) {
       return Robot.red;

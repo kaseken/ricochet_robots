@@ -4,11 +4,12 @@ import 'package:ricochet_robots/domains/board/board_builder.dart';
 import 'package:ricochet_robots/domains/board/board_id.dart';
 import 'package:ricochet_robots/domains/board/position.dart';
 import 'package:ricochet_robots/domains/board/robot.dart';
+import 'package:ricochet_robots/domains/edit/edit.dart';
 import 'package:ricochet_robots/domains/game/history.dart';
 
 part 'game_state.freezed.dart';
 
-enum GameMode { play, showResult }
+enum GameMode { play, showResult, edit }
 
 @freezed
 class GameState with _$GameState {
@@ -19,6 +20,7 @@ class GameState with _$GameState {
     required Board board,
     required List<History> histories,
     required Robot focusedRobot,
+    required Position? selectedGridForEdit,
   }) = _GameState;
 
   bool get shouldShowResult => mode == GameMode.showResult;
@@ -36,6 +38,7 @@ class GameState with _$GameState {
       board: board,
       histories: [],
       focusedRobot: const Robot(color: RobotColors.red),
+      selectedGridForEdit: null,
     );
   }
 
@@ -79,6 +82,18 @@ class GameState with _$GameState {
   }
 
   GameState onRestart() => copyWith(board: Board.random).initialized;
+
+  GameState onEditModeEvent({required bool toEditMode}) =>
+      copyWith(mode: toEditMode ? GameMode.edit : GameMode.play);
+
+  GameState onEditBoardEvent({required EditAction editAction}) {
+    final newSelectedGridForEdit =
+        selectedGridForEdit == null ? editAction.position : null;
+    return copyWith(
+      board: EditFunction.update(board, editAction, selectedGridForEdit),
+      selectedGridForEdit: newSelectedGridForEdit,
+    );
+  }
 
   GameState get initialized => copyWith(
         mode: GameMode.play,

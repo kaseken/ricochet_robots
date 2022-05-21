@@ -42,6 +42,24 @@ class Goal {
     return Goal(color: _buildColor(n), type: _buildType(n));
   }
 
+  Goal get nextColor {
+    if (color == null) {
+      return this;
+    }
+    final nextIndex = (color!.index + 1) % RobotColors.values.length;
+    final nextColor = RobotColors.values[nextIndex];
+    return Goal(color: nextColor, type: type);
+  }
+
+  Goal get nextType {
+    if (type == null) {
+      return this;
+    }
+    final nextIndex = (type!.index + 1) % GoalTypes.values.length;
+    final nextType = GoalTypes.values[nextIndex];
+    return Goal(color: color, type: nextType);
+  }
+
   static RobotColors _buildColor(int n) {
     assert(1 <= n && n <= 16);
     if (n <= 4) {
