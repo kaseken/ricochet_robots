@@ -85,6 +85,15 @@ class RobotPositions with _$RobotPositions {
     );
   }
 
+  RobotPositions get rotateRight {
+    return copyWith(
+      red: red.rotateRight,
+      blue: blue.rotateRight,
+      green: green.rotateRight,
+      yellow: yellow.rotateRight,
+    );
+  }
+
   Robot? getRobotIfExists({required Position position}) {
     if (position == red) {
       return Robot.red;

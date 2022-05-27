@@ -60,10 +60,12 @@ class HeaderWidget extends StatelessWidget {
     final type = goal.type;
     final color = goal.color;
     if (type == null || color == null) {
-      return const Icon(
-        Icons.help,
-        size: 20,
+      return EditableIcon(
+        iconData: Icons.help,
         color: Colors.deepPurple,
+        size: 20,
+        editAction: const EditAction(nextGoalColor: true),
+        currentMode: currentMode,
       );
     }
     return EditableIcon(
@@ -98,6 +100,15 @@ class HeaderWidget extends StatelessWidget {
             ],
           ),
           const Expanded(child: SizedBox.shrink()),
+          toEditMode
+              ? const SizedBox.shrink()
+              : EditableIcon(
+                  iconData: Icons.rotate_right,
+                  color: Colors.grey,
+                  size: 20,
+                  editAction: const EditAction(rotateRightGrids: true),
+                  currentMode: currentMode,
+                ),
           Text("${histories.length.toString()} moves", style: _textStyle),
           const SizedBox(width: 8.0),
           IconButton(
