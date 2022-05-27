@@ -4,6 +4,7 @@ import 'package:ricochet_robots/domains/board/robot.dart';
 
 abstract class Rotatable {
   Grid get rotateRight;
+  Grid copyWithCanMoveOnly(Grid grid);
 }
 
 abstract class Grid implements Rotatable {
@@ -78,6 +79,16 @@ class NormalGrid extends Grid {
       );
 
   @override
+  NormalGrid copyWithCanMoveOnly(Grid grid) {
+    return NormalGrid(
+      canMoveUp: grid.canMoveUp,
+      canMoveRight: grid.canMoveRight,
+      canMoveDown: grid.canMoveDown,
+      canMoveLeft: grid.canMoveLeft,
+    );
+  }
+
+  @override
   NormalGrid setCanMove({
     required Directions directions,
     required bool canMove,
@@ -139,6 +150,18 @@ class NormalGoalGrid extends GoalGrid {
       );
 
   @override
+  NormalGoalGrid copyWithCanMoveOnly(Grid grid) {
+    return NormalGoalGrid(
+      color: color,
+      type: type,
+      canMoveUp: grid.canMoveUp,
+      canMoveRight: grid.canMoveRight,
+      canMoveDown: grid.canMoveDown,
+      canMoveLeft: grid.canMoveLeft,
+    );
+  }
+
+  @override
   NormalGoalGrid setCanMove({
     required Directions directions,
     required bool canMove,
@@ -178,6 +201,16 @@ class WildGoalGrid extends GoalGrid {
         canMoveDown: canMoveRight,
         canMoveLeft: canMoveDown,
       );
+
+  @override
+  WildGoalGrid copyWithCanMoveOnly(Grid grid) {
+    return WildGoalGrid(
+      canMoveUp: grid.canMoveUp,
+      canMoveRight: grid.canMoveRight,
+      canMoveDown: grid.canMoveDown,
+      canMoveLeft: grid.canMoveLeft,
+    );
+  }
 
   @override
   WildGoalGrid setCanMove({

@@ -50,4 +50,12 @@ class Position with _$Position {
         return copyWith(x: x - 1);
     }
   }
+
+  Position get rotateRight {
+    return Position(x: -y + 16 - 1, y: x);
+  }
+
+  Position get rotateLeft {
+    return Position(x: y, y: -x + 16 - 1);
+  }
 }

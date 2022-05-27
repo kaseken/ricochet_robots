@@ -9,6 +9,7 @@ class EditAction with _$EditAction {
   const factory EditAction({
     @Default(false) bool nextGoalColor,
     @Default(false) bool nextGoalType,
+    @Default(false) bool rotateRightGrids,
     Position? position,
     Position? topBorder,
     Position? rightBorder,
@@ -35,6 +36,12 @@ class EditFunction {
         grids: newBoard.grids.swap(prePosition, action.position!),
         robotPositions:
             newBoard.robotPositions.swap(prePosition, action.position!),
+      );
+    }
+    if (action.rotateRightGrids) {
+      newBoard = newBoard.copyWith(
+        grids: newBoard.grids.rotateRight,
+        robotPositions: newBoard.robotPositions.rotateRight,
       );
     }
     if (action.topBorder != null) {

@@ -30,12 +30,22 @@ class Grids {
       return List.generate(grids[y].length, (x) {
         final position = Position(x: x, y: y);
         if (position == a) {
-          return at(position: b);
+          return at(position: b).copyWithCanMoveOnly(at(position: a));
         }
         if (position == b) {
-          return at(position: a);
+          return at(position: a).copyWithCanMoveOnly(at(position: b));
         }
         return at(position: position);
+      });
+    });
+    return Grids(grids: newGrids);
+  }
+
+  Grids get rotateRight {
+    final newGrids = List.generate(grids.length, (y) {
+      return List.generate(grids[y].length, (x) {
+        final position = Position(x: x, y: y).rotateLeft;
+        return at(position: position).rotateRight;
       });
     });
     return Grids(grids: newGrids);

@@ -44,9 +44,12 @@ class Goal {
 
   Goal get nextColor {
     if (color == null) {
-      return this;
+      return Goal(color: RobotColors.values[0], type: GoalTypes.values[0]);
     }
     final nextIndex = (color!.index + 1) % RobotColors.values.length;
+    if (nextIndex == 0) {
+      return const Goal(color: null, type: null);
+    }
     final nextColor = RobotColors.values[nextIndex];
     return Goal(color: nextColor, type: type);
   }
