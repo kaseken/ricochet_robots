@@ -79,8 +79,13 @@ class HeaderWidget extends StatelessWidget {
 
   Future<void> _copyUrlToClipBoard() async {
     final id = BoardId.from(board: board);
+    final base = Uri.parse(Uri.base.toString().replaceFirst("#", "sharp"));
+    final created = base
+        .replace(queryParameters: {...base.queryParameters, "id": id.encoded})
+        .toString()
+        .replaceFirst("sharp", "#");
     await Clipboard.setData(
-      ClipboardData(text: '${Uri.base.toString()}?id=${id.encoded}'),
+      ClipboardData(text: created),
     );
   }
 
