@@ -43,7 +43,7 @@ final _defaultRedAlpha = BoardQuarterRed.from(
     const WallPosition(x: 4, y: 1),
     const WallPosition(x: 1, y: 4),
     const WallPosition(x: 5, y: 5),
-    const WallPosition(x: 1, y: 6),
+    const WallPosition(x: 0, y: 6),
     const WallPosition(x: 3, y: 7),
     const WallPosition(x: 7, y: 7),
     const WallPosition(x: 7, y: 8),

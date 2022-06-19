@@ -81,6 +81,8 @@ class GameState with _$GameState {
     );
   }
 
+  GameState onReplay() => copyWith(mode: GameMode.play);
+
   GameState onRestart() => copyWith(board: Board.random).initialized;
 
   GameState onEditModeEvent({required bool toEditMode}) =>

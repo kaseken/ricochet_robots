@@ -17,6 +17,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           emit(state.onDirectionSelected(direction: event.direction)),
     );
     on<RedoEvent>((event, emit) => emit(state.onRedoPressed()));
+    on<ReplayEvent>((event, emit) => emit(state.onReplay()));
     on<RestartEvent>((event, emit) => emit(state.onRestart()));
     on<EditModeEvent>((event, emit) =>
         emit(state.onEditModeEvent(toEditMode: event.toEditMode)));
@@ -43,6 +44,10 @@ class SelectDirectionEvent extends GameEvent {
 
 class RedoEvent extends GameEvent {
   const RedoEvent();
+}
+
+class ReplayEvent extends GameEvent {
+  const ReplayEvent();
 }
 
 class RestartEvent extends GameEvent {
