@@ -69,11 +69,47 @@ class Board with _$Board {
     final rightHalfGrids = topRightGrids + bottomRightGrids;
     return init(
       grids: Grids(
-        grids: List.generate(leftHalfGrids.length, (y) {
-          return leftHalfGrids[y] + rightHalfGrids[y];
-        }),
+        grids: fixQuarterBorder(
+          List.generate(leftHalfGrids.length, (y) {
+            return leftHalfGrids[y] + rightHalfGrids[y];
+          }),
+        ),
       ),
     );
+  }
+
+  static List<List<Grid>> fixQuarterBorder(List<List<Grid>> grids) {
+    final halfLengthY = (grids.length / 2).floor();
+    return List.generate(grids.length, (y) {
+      final halfLengthX = (grids[y].length / 2).floor();
+      return List.generate(grids[y].length, (x) {
+        if (y == halfLengthY - 1) {
+          return grids[y][x].setCanMove(
+            directions: Directions.down,
+            canMove: grids[y][x].canMoveDown && grids[y + 1][x].canMoveUp,
+          );
+        }
+        if (y == halfLengthY) {
+          return grids[y][x].setCanMove(
+            directions: Directions.up,
+            canMove: grids[y - 1][x].canMoveDown && grids[y][x].canMoveUp,
+          );
+        }
+        if (x == halfLengthX - 1) {
+          return grids[y][x].setCanMove(
+            directions: Directions.right,
+            canMove: grids[y][x].canMoveRight && grids[y][x + 1].canMoveLeft,
+          );
+        }
+        if (x == halfLengthX) {
+          return grids[y][x].setCanMove(
+            directions: Directions.left,
+            canMove: grids[y][x - 1].canMoveRight && grids[y][x].canMoveLeft,
+          );
+        }
+        return grids[y][x];
+      });
+    });
   }
 
   Board moved(Robot robot, Directions direction) {
