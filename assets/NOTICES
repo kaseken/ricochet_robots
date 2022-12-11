@@ -4776,6 +4776,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 build_config
 graphs
 io
+stream_transform
 
 Copyright 2017, the Dart project authors. 
 
@@ -4971,7 +4972,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 clock
 fake_async
 material_color_utilities
-quiver
 
 
                                  Apache License
@@ -11560,7 +11560,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------------------------------------------------------------------------
 json_annotation
-stream_transform
 term_glyph
 
 Copyright 2017, the Dart project authors. All rights reserved.
