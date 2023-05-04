@@ -9,5 +9,5 @@ fvm flutter pub run build_runner build
 ## Run app
 
 ```shell
-flutter run -d chrome
+fvm flutter run -d chrome
 ```
